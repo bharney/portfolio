@@ -12,7 +12,7 @@ import AlertState from './store/Alert';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import Loading from './components/Common/Loading';
 const AsyncHome = lazy(() => import(/* webpackChunkName: "Home" */ './components/Home/Home'));
 const AsyncAbout = lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
@@ -52,14 +52,18 @@ export const NavContext = React.createContext({
 export const AuthContext = React.createContext(null);
 export const App = (props: AppProps) => {
 	const [state, setState] = useState({ on: false });
+	useEffect(() => {
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 	const session = useAppSelector(state => state);
 	const alertActions = AlertState.actionCreators;
 	const toggle = () => {
 		setState({ on: !state.on });
 		if (state.on) {
-			handleSidebarPosition();
-		} else {
 			handleSidebarToggle();
+		} else {
+			handleSidebarPosition();
 		}
 	};
 	const onUpdate = () => {
@@ -96,7 +100,6 @@ export const App = (props: AppProps) => {
 		}
 	};
 
-	window.addEventListener('resize', handleResize);
 	const { pca, ...rest } = props;
 	return (
 		// <ServerDataProvider value={props ? serverData : null}>
