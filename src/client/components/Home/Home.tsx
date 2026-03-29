@@ -15,18 +15,27 @@ export default class Home extends React.Component<{}, {}> {
 						</p>
 					</div>
 				</div>
-				<div className="bg-bloack text-white landing">
+				<div className="text-white landing">
 					<div className="container">
 						<div className="row gy-4">
 							<div className="col-md">
 								<p>
-									Our increasingly connected world demands services that are resiliant, fast, and
-									always available. We've has been raising our expectations about web applications,
-									and rethinking how we share code and ideas. But sometimes it can be difficult to
-									understand all of the new technology because the web has been changing at a mile a
-									minute. I want to show you some of the things I've learned in my own experiences
-									building applications. I hope that these writings may help you in your search for
-									an answers/solutions to your own problems.
+									I've spent a long time learning and experimenting, so I could make the right choices about my software.
+									So you could have a great experience at my humble abode. I want to show what I've built.
+								</p>
+								<p>
+									AI has changed software forever. Anyone can build it now. There are no excuses.
+									You, reading this right now, can build can build a portfolio website just like this one. 
+									There are many like it, but this one is mine. 
+								</p>
+								<p>
+									Spend some time on my portfolio page to see what I've built. 
+									Our increasingly connected world demands resilient, fast, and
+									always available services. Our 24/7 world is more demanding than ever.
+									But I hope I can meet those demands by leveraging cloud computing, and AI.
+								</p>
+								<p>
+									I hope you enjoy my portfolio, and I hope it inspires you to build your own.
 								</p>
 							</div>
 						</div>
