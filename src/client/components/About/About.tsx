@@ -11,8 +11,8 @@ export default class About extends React.Component<{}, {}> {
 							Hello! I'm Brian Harney, a passionate Software Engineer at Microsoft, based in the
 							vibrant city of Chicago. I'm thrilled to have the opportunity to build incredible
 							software and contribute to the ever-evolving world of web development. But before we
-							dive into the tech talk, let me introduce you to my furry companions – Abe, my amazing
-							cat, and Goldie, my loyal dog. They bring endless joy to my life here in Chicago.
+							dive into the tech talk, let me introduce you to my furry companion – Abe, my amazing
+							cat. He brings endless joy to my life here in Chicago.
 						</p>
 						<p className="col fs-4">
 							<strong>The Changing Landscape of Web Development:</strong>
@@ -36,7 +36,7 @@ export default class About extends React.Component<{}, {}> {
 							always easy to stay in the loop. That's why I'm here – to help demystify these changes
 							and provide you with valuable insights. Thanks for visiting, and feel free to reach
 							out if you have any questions or simply want to chat about tech, Chicago, or, of
-							course, Abe and Goldie!
+							course, Abe!
 						</p>
 					</div>
 				</div>
