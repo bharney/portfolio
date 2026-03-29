@@ -200,7 +200,7 @@ export default class Portfolio extends React.Component<{}, {}> {
 									<Link
 										className="icon-link icon-link-hover"
 										target="_blank"
-										to="https://bharneyportfolio.azurewebsites.net/"
+										to="https://parallax-afghd4g2byafgqeu.westus-01.azurewebsites.net/"
 									>
 										<h5 className="card-title">bharney Portfolio</h5>
 										<FontAwesomeIcon
