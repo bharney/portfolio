@@ -7,7 +7,11 @@ class LoadingRoute extends React.Component<{}, {}> {
 	public render() {
 		return (
 			<div>
-				<FontAwesomeIcon icon={faSpinner as IconProp} spin size="2x" />
+				<FontAwesomeIcon
+					icon={faSpinner as IconProp}
+					spin
+					style={{ color: '#fff', width: '2rem', height: '2rem' }}
+				/>
 			</div>
 		);
 	}

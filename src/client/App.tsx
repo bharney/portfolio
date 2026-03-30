@@ -9,7 +9,6 @@ import { useAppSelector } from './store/index';
 import { actionCreators as sessionActions } from './store/Session';
 import { actionCreators as accountActions } from './store/Account';
 import AlertState from './store/Alert';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
 import { Suspense, useContext, useEffect, useState } from 'react';
@@ -52,6 +51,12 @@ export const NavContext = React.createContext({
 export const AuthContext = React.createContext(null);
 export const App = (props: AppProps) => {
 	const [state, setState] = useState({ on: false });
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			void import('bootstrap/dist/js/bootstrap.bundle.min.js');
+		}
+	}, []);
+
 	useEffect(() => {
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
