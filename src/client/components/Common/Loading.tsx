@@ -8,13 +8,13 @@ class Loading extends React.Component<{}, {}> {
 		return (
 			<div className="container pt-4" style={{ height: '70vh' }}>
 				<FontAwesomeIcon
-					className="svg-inline--fa fa-w-16 fa-lg"
-					size="1x"
 					style={{
 						position: 'absolute',
 						top: '7vh',
 						left: '50%',
-						fontSize: '45px'
+						color: '#fff',
+						width: '2rem',
+						height: '2rem'
 					}}
 					icon={faSpinner as IconProp}
 					spin

@@ -4,6 +4,7 @@ declare module '*.jpg';
 declare module '*.png';
 declare module '*.gif';
 declare module '*.svg';
+declare module 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 /** Indicates we are in a server (node) environment. Injected via webpack's DefinePlugin. */
 declare const __SERVER__: boolean;

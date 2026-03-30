@@ -7,8 +7,16 @@ import { HTML_TEMPLATE_PATH } from '../configuration';
 import { PrerenderData } from '../../shared/PrerenderedData';
 import { ServerStyleSheet } from 'styled-components';
 import path from 'path';
-import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
-import ReactDOMServer from 'react-dom/server';
+import { ChunkExtractor } from '@loadable/server';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import thunk from 'redux-thunk';
+import { rootReducers } from '../../client/store';
+
+interface RenderedApp {
+	reactHtml: string;
+	styleTags: string;
+}
 /**
  * Renders the react App as a html string.
  * @param url The render url. It will be injected in the react router so it can render the corresponding route.
@@ -23,11 +31,17 @@ export async function renderReactAsync(url: string, prerenderedObject?: unknown)
 	// create an element to store server side data
 
 	const dataElement = PrerenderData.saveToDom(prerenderedObject);
+	const store = configureStore({
+		reducer: rootReducers,
+		middleware: [thunk]
+	});
 
 	const WrappedApp = (
-		<StaticRouter location={url}>
-			<App serverData={prerenderedObject ?? null} />
-		</StaticRouter>
+		<Provider store={store}>
+			<StaticRouter location={url}>
+				<App serverData={prerenderedObject ?? null} />
+			</StaticRouter>
+		</Provider>
 	);
 
 	/*
@@ -35,51 +49,48 @@ export async function renderReactAsync(url: string, prerenderedObject?: unknown)
         without prerendering styled-components, the page will flash a styleless version of it
      */
 
-	const [reactContent, styleTags] = renderToStringWithStyles(WrappedApp);
+	const renderedApp = renderToStringWithStyles(WrappedApp);
 
 	// finally combine all parts together
 
-	const renderedHtml = buildHtml(staticHtmlContent, reactContent, styleTags, dataElement);
+	const renderedHtml = buildHtml(staticHtmlContent, renderedApp, dataElement);
 
 	return renderedHtml;
 }
 
-function buildHtml(templateHtml: string, reactHtml: string, styleTags: string, dataTag: string) {
-	const pattern = /(?<head><head>)|(?<root><div\sid="root">)/g;
+function buildHtml(templateHtml: string, renderedApp: RenderedApp, dataTag: string) {
+	const pattern = /<head>|<div\sid="root">/g;
 
-	return templateHtml.replace(pattern, (match, ...params: any[]) => {
-		const groups = params.pop();
+	return templateHtml.replace(pattern, match => {
+		if (match === '<head>') {
+			return `<head>${renderedApp.styleTags}`;
+		}
 
-		if (groups.head) return groups.head + styleTags;
-		if (groups.root) return dataTag + groups.root + reactHtml;
+		if (match === '<div id="root">') {
+			return `${dataTag}<div id="root">${renderedApp.reactHtml}`;
+		}
 
 		return match;
 	});
 }
 
-function renderToStringWithStyles(component: JSX.Element) {
-	debugger;
+function renderToStringWithStyles(component: JSX.Element): RenderedApp {
 	const sheet = new ServerStyleSheet();
 	try {
 		// In SSR, using react-router-dom/BrowserRouter will throw an exception.
 		// Instead, we use react-router-dom/server/StaticRouter.
 		// In the client compilation, we still use BrowserRouter (see: src/client/Index.tsx)
-		const statsFile = path.resolve('./dist/loadable-stats.json');
-		const extractor = new ChunkExtractor({ statsFile });
-		const jsx = extractor.collectChunks(component);
+		const clientStatsPath = path.resolve('./dist/public/loadable-stats.json');
+		const statsFile = fs.existsSync(clientStatsPath)
+			? clientStatsPath
+			: path.resolve('./dist/loadable-stats.json');
+		const extractor = new ChunkExtractor({ statsFile, entrypoints: ['index'] });
+		const jsx = extractor.collectChunks(sheet.collectStyles(component));
 
-		const reactHtml = `
-            <html>
-                <head>
-                    ${extractor.getLinkTags()}
-                </head>
-                <body>
-                    <div id="react-app">${ReactDOMServer.renderToString(jsx)}</div>
-                    ${extractor.getScriptTags()}
-                </body>
-            </html>
-        `;
-		return [reactHtml, extractor.getStyleTags()];
+		return {
+			reactHtml: renderToString(jsx),
+			styleTags: sheet.getStyleTags()
+		};
 	} finally {
 		sheet.seal();
 	}
