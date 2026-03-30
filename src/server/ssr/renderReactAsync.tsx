@@ -80,10 +80,9 @@ function renderToStringWithStyles(component: JSX.Element): RenderedApp {
 		// In SSR, using react-router-dom/BrowserRouter will throw an exception.
 		// Instead, we use react-router-dom/server/StaticRouter.
 		// In the client compilation, we still use BrowserRouter (see: src/client/Index.tsx)
-		const clientStatsPath = path.resolve('./dist/public/loadable-stats.json');
-		const statsFile = fs.existsSync(clientStatsPath)
-			? clientStatsPath
-			: path.resolve('./dist/loadable-stats.json');
+		const clientStatsPath = path.join(__dirname, 'public', 'loadable-stats.json');
+		const serverStatsPath = path.join(__dirname, 'loadable-stats.json');
+		const statsFile = fs.existsSync(clientStatsPath) ? clientStatsPath : serverStatsPath;
 		const extractor = new ChunkExtractor({ statsFile, entrypoints: ['index'] });
 		const jsx = extractor.collectChunks(sheet.collectStyles(component));
 
