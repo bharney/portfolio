@@ -6,7 +6,7 @@
 	}
 
 	.list-group {
-		font-family: 'Fjalla One', sans-serif;
+		font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
 		.list-group-item.active {
 			background-color: $primary;
 			border-color: $darker;

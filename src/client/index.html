@@ -13,6 +13,11 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+		<!-- Preload the Latin woff2 files so the browser fetches them immediately -->
+		<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/firasanscondensed/v11/wEOsEADFm8hSaQTFG18FErVhsC9x-tarWSnJuMR0cg.woff2" />
+		<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/fjallaone/v16/Yq6R-LCAWCX3-6Ky7FAFrOF6kg.woff2" />
+		<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/playfairdisplay/v40/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtM.woff2" />
+
 		<!-- Load Google Fonts with font-display=swap to avoid FOIT -->
 		<link
 			rel="stylesheet"
@@ -29,9 +34,34 @@
 
 		<!-- Critical inline CSS for above-the-fold content (body, nav, hero) -->
 		<style>
+			/* System font fallbacks with size-adjust to minimize CLS during font swap */
+			@font-face {
+				font-family: 'Playfair Display Fallback';
+				src: local('Georgia');
+				size-adjust: 104%;
+				ascent-override: 95%;
+				descent-override: 22%;
+				line-height-override: normal;
+			}
+			@font-face {
+				font-family: 'Fjalla One Fallback';
+				src: local('Arial Narrow'), local('Arial');
+				size-adjust: 96%;
+				ascent-override: 100%;
+				descent-override: 22%;
+				line-height-override: normal;
+			}
+			@font-face {
+				font-family: 'Fira Sans Condensed Fallback';
+				src: local('Arial Narrow'), local('Arial');
+				size-adjust: 91%;
+				ascent-override: 101%;
+				descent-override: 27%;
+				line-height-override: normal;
+			}
 			html, body {
 				overflow-x: hidden;
-				font-family: 'Playfair Display', serif;
+				font-family: 'Playfair Display', 'Playfair Display Fallback', Georgia, serif;
 				background-color: #343a40;
 				margin: 0;
 			}
@@ -39,17 +69,20 @@
 			#root { min-height: 100vh; }
 			/* Nav skeleton to prevent layout shift */
 			#custom-nav, .navbar {
-				font-family: 'Fjalla One', sans-serif;
+				font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
 				font-size: 1.5rem;
 				color: #e9ecef;
 			}
-			/* Hero text skeleton */
+			/* Hero container: fixed min-height prevents CLS when font loads */
 			.hero {
-				font-family: 'Fira Sans Condensed', sans-serif;
+				font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 				font-weight: 600;
 				font-size: 6rem;
 				color: #e9ecef;
+				min-height: 152px;
+				line-height: 1.1;
 			}
+			@media (max-width: 767px) { .hero { font-size: 3rem; min-height: 80px; } }
 			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
 		</style>
 	</head>

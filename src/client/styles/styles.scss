@@ -16,7 +16,7 @@
 html,
 body {
 	overflow-x: hidden; /* Prevent scroll on narrow devices */
-	font-family: 'Playfair Display', serif;
+	font-family: 'Playfair Display', 'Playfair Display Fallback', Georgia, serif;
 	background-color: $dark;
 }
 
@@ -33,7 +33,7 @@ body {
 /*  ----------------------- NAVIGATION --------------------------- */
 nav {
 	font-size: 1rem;
-	font-family: 'Fjalla One', sans-serif;
+	font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
 	.nav-link {
 		color: $secondary;
 		font-size: 1.5rem;
@@ -48,7 +48,7 @@ nav {
 }
 #custom-nav {
 	color: $secondary;
-	font-family: 'Fjalla One', sans-serif;
+	font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
 	font-size: 1.5rem;
 	padding-top: 1em;
 	padding-bottom: 1em;
@@ -104,10 +104,17 @@ main {
 	}
 
 	.hero {
-		font-family: 'Fira Sans Condensed', sans-serif;
+		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 		font-weight: 600;
 		font-size: 6rem;
 		color: $secondary;
+		min-height: 152px;
+		line-height: 1.1;
+
+		@media (max-width: 767px) {
+			font-size: 3rem;
+			min-height: 80px;
+		}
 	}
 
 	.hero-border {
