@@ -5,8 +5,6 @@ import { StaticRouter } from 'react-router-dom/server';
 import fs from 'fs';
 import { HTML_TEMPLATE_PATH } from '../configuration';
 import { PrerenderData } from '../../shared/PrerenderedData';
-import path from 'path';
-import { ChunkExtractor } from '@loadable/server';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
@@ -42,7 +40,7 @@ export async function renderReactAsync(url: string, prerenderedObject?: unknown)
         Render the react content as an HTML string.
      */
 
-	const reactHtml = renderToStringWithChunks(WrappedApp);
+	const reactHtml = renderToString(WrappedApp);
 
 	// finally combine all parts together
 
@@ -61,19 +59,4 @@ function buildHtml(templateHtml: string, reactHtml: string, dataTag: string) {
 
 		return match;
 	});
-}
-
-function renderToStringWithChunks(component: JSX.Element): string {
-	try {
-		const clientStatsPath = path.join(__dirname, 'public', 'loadable-stats.json');
-		const serverStatsPath = path.join(__dirname, 'loadable-stats.json');
-		const statsFile = fs.existsSync(clientStatsPath) ? clientStatsPath : serverStatsPath;
-		const extractor = new ChunkExtractor({ statsFile, entrypoints: ['index'] });
-		const jsx = extractor.collectChunks(component);
-
-		return renderToString(jsx);
-	} catch (e) {
-		console.error('SSR render error:', e);
-		return '';
-	}
 }

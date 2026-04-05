@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -21,12 +20,11 @@ function renderApp() {
 	}
 	// This code starts up the React app when it runs in a browser. It sets up the routing configuration
 	// and injects the app into a DOM element.
-	const history = createBrowserHistory();
 	const app = createRoot(root);
 	app.render(
 		<BrowserRouter>
 			<Provider store={store}>
-				<App {...history} />
+				<App />
 			</Provider>
 		</BrowserRouter>
 	);

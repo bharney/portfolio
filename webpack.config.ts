@@ -11,15 +11,15 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { merge } from 'webpack-merge';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-// import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
+import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-const LoadablePlugin = require('@loadable/webpack-plugin');
 const autoprefixer = require('autoprefixer');
 interface Env {
 	production: boolean;
 	hot: boolean;
+	analyze: boolean;
 }
 
 function createBaseConfig(env: Env): Configuration {
@@ -106,8 +106,7 @@ function createServerConfig(_env: Env): Configuration {
 					context: '/',
 					postcss: () => [autoprefixer]
 				}
-			}),
-			new LoadablePlugin()
+			})
 		]
 	};
 } // end server configuration
@@ -118,7 +117,6 @@ function createClientConfig(env: Env): Configuration {
 		presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
 		plugins: [
 			'@babel/plugin-transform-runtime',
-			'@loadable/babel-plugin',
 			env.hot && require.resolve('react-refresh/babel')
 		].filter(Boolean)
 	};
@@ -217,13 +215,13 @@ function createClientConfig(env: Env): Configuration {
 			new DefinePlugin({
 				__SERVER__: JSON.stringify(false)
 			}),
-			new LoadablePlugin(),
 			// Extract CSS into separate files in production for better caching
 			env.production && new MiniCssExtractPlugin({
 				filename: 'css/[name].[contenthash].css',
 				chunkFilename: 'css/[id].[contenthash].css'
 			}),
-			(env.hot && new ReactRefreshPlugin()) as any // casting so tsc will stop complaining
+			(env.hot && new ReactRefreshPlugin()) as any, // casting so tsc will stop complaining
+			env.analyze && new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true })
 		].filter(Boolean),
 		devServer: {
 			hot: env.hot,
@@ -236,7 +234,8 @@ function createClientConfig(env: Env): Configuration {
 export default function (e: any) {
 	const env: Env = {
 		hot: !!e['HOT'],
-		production: !!e['PRODUCTION']
+		production: !!e['PRODUCTION'],
+		analyze: !!e['ANALYZE']
 	};
 
 	const baseConfig = createBaseConfig(env);

@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Footer from './components/Footer/Footer';
 import NavMenu from './components/Nav/NavMenu';
-import { lazy } from '@loadable/component';
 import * as React from 'react';
 import { useAppSelector } from './store/index';
 import { actionCreators as sessionActions } from './store/Session';
@@ -11,18 +10,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';
-const AsyncHome = lazy(() => import(/* webpackChunkName: "Home" */ './components/Home/Home'));
-const AsyncAbout = lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
-const AsyncContact = lazy(
+const AsyncHome = React.lazy(() => import(/* webpackChunkName: "Home" */ './components/Home/Home'));
+const AsyncAbout = React.lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
+const AsyncContact = React.lazy(
 	() => import(/* webpackChunkName: "Contact" */ './components/Contact/Contact')
 );
-const AsyncLayout = lazy(
+const AsyncLayout = React.lazy(
 	() => import(/* webpackChunkName: "Layout" */ './components/Layout/Layout')
 );
-const AsyncNotFound = lazy(
+const AsyncNotFound = React.lazy(
 	() => import(/* webpackChunkName: "NotFound" */ './components/NotFound/NotFound')
 );
-const AsyncPortfolio = lazy(
+const AsyncPortfolio = React.lazy(
 	() => import(/* webpackChunkName: "Portfolio" */ './components/Portfolio/Portfolio')
 );
 
