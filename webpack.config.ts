@@ -93,12 +93,6 @@ function createServerConfig(_env: Env): Configuration {
 			new CleanWebpackPlugin({
 				cleanOnceBeforeBuildPatterns: ['!public/**']
 			}),
-			new CopyWebpackPlugin({
-				patterns: [
-					// web.config must be at the app root (dist/) for IIS/iisnode, not in dist/public/
-					{ from: resolve(__dirname, 'web.config'), to: resolve(__dirname, 'dist') }
-				]
-			}),
 			new DefinePlugin({
 				__Server__: JSON.stringify(true)
 			}),
