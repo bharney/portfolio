@@ -7,16 +7,14 @@ import { NavContext } from '../../App';
 import * as AccountState from '../../store/Account';
 import AlertState from '../../store/Alert';
 import * as SessionState from '../../store/Session';
-import {
-	faFacebook,
-	faTwitter,
-	faLinkedin,
-	faGithub,
-	faDocker,
-	faStackOverflow,
-	faPaypal,
-	faInstagram
-} from '@fortawesome/free-brands-svg-icons';
+import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faDocker } from '@fortawesome/free-brands-svg-icons/faDocker';
+import { faStackOverflow } from '@fortawesome/free-brands-svg-icons/faStackOverflow';
+import { faPaypal } from '@fortawesome/free-brands-svg-icons/faPaypal';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons/faInstagram';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

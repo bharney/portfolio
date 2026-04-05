@@ -16,7 +16,7 @@ import bharneyPortfolioWebp from '../../images/bharneyportfolio.webp';
 import yogamariemills from '../../images/yogamariemills.png';
 import yogamariemillsWebp from '../../images/yogamariemills.webp';
 import { Link } from 'react-router-dom';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import OptimizedImage from '../Common/OptimizedImage';
