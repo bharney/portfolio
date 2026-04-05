@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import Footer from './components/Footer/Footer';
 import NavMenu from './components/Nav/NavMenu';
 import * as React from 'react';
 import { useAppSelector } from './store/index';
@@ -12,6 +11,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';
 import Home from './components/Home/Home';
 import { Layout } from './components/Layout/Layout';
+const AsyncFooter = React.lazy(() => import(/* webpackChunkName: "Footer" */ './components/Footer/Footer'));
 const AsyncAbout = React.lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
 const AsyncContact = React.lazy(
 	() => import(/* webpackChunkName: "Contact" */ './components/Contact/Contact')
@@ -123,7 +123,9 @@ export const App = (props: AppProps) => {
 			<Layout {...rest} {...props}>
 				{lazy ? <Suspense fallback={<Loading />}>{content}</Suspense> : content}
 			</Layout>
-			<Footer />
+			<Suspense fallback={null}>
+				<AsyncFooter />
+			</Suspense>
 		</NavContext.Provider>
 	);
 

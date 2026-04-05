@@ -166,6 +166,13 @@ function createClientConfig(env: Env): Configuration {
 					}
 				},
 				{
+					test: /\.(woff|woff2|eot|ttf)$/,
+					type: 'asset/resource',
+					generator: {
+						filename: 'fonts/[name].[contenthash][ext]'
+					}
+				},
+				{
 					test: /\.(sass|css|scss)$(\?|$)/,
 					use: [
 						// In production, extract CSS to separate files for caching & parallel loading
@@ -223,19 +230,37 @@ function createClientConfig(env: Env): Configuration {
 			}),
 			(env.hot && new ReactRefreshPlugin()) as any, // casting so tsc will stop complaining
 			env.analyze && new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }),
-			// Make extracted CSS non-render-blocking (critical CSS is already inlined in index.html)
+			// Make extracted CSS non-render-blocking and preload self-hosted fonts
 			env.production && {
 				apply(compiler: any) {
 					compiler.hooks.compilation.tap('AsyncCssPlugin', (compilation: any) => {
 						HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync(
 							'AsyncCssPlugin',
 							(data: any, cb: any) => {
+								// 1. Make CSS links non-render-blocking
 								[...data.headTags, ...data.bodyTags].forEach((tag: any) => {
 									if (tag.tagName === 'link' && tag.attributes && tag.attributes.rel === 'stylesheet') {
 										tag.attributes.media = 'print';
 										tag.attributes.onload = "this.media='all'";
 									}
 								});
+
+								// 2. Inject <link rel="preload"> for self-hosted woff2 fonts
+								const fontAssets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff2'));
+								const fontPreloads = fontAssets.map((name: string) => ({
+									tagName: 'link',
+									voidTag: true,
+									attributes: {
+										rel: 'preload',
+										as: 'font',
+										type: 'font/woff2',
+										crossorigin: 'anonymous',
+										href: `/${name}`
+									}
+								}));
+								// Insert font preloads at the beginning of head tags
+								data.headTags.unshift(...fontPreloads);
+
 								cb(null, data);
 							}
 						);
