@@ -20,7 +20,7 @@ export function createServer() {
 			// Hashed files (js/css with chunkhash) get immutable long-term caching.
 			// Non-hashed files (favicon, robots.txt, sitemap) get a short cache with revalidation.
 			setHeaders(res, filePath) {
-				if (/\.[a-f0-9]{16,}\.(js|css|woff2)$/.test(filePath)) {
+				if (/\.[a-f0-9]{16,}\.(js|css|woff2|woff)$/.test(filePath)) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 				} else {
 					res.setHeader('Cache-Control', 'public, max-age=3600');
