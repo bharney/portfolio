@@ -10,13 +10,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';
-const AsyncHome = React.lazy(() => import(/* webpackChunkName: "Home" */ './components/Home/Home'));
+import Home from './components/Home/Home';
+import { Layout } from './components/Layout/Layout';
 const AsyncAbout = React.lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
 const AsyncContact = React.lazy(
 	() => import(/* webpackChunkName: "Contact" */ './components/Contact/Contact')
-);
-const AsyncLayout = React.lazy(
-	() => import(/* webpackChunkName: "Layout" */ './components/Layout/Layout')
 );
 const AsyncNotFound = React.lazy(
 	() => import(/* webpackChunkName: "NotFound" */ './components/NotFound/NotFound')
@@ -103,154 +101,40 @@ export const App = (props: AppProps) => {
 	};
 
 	const { pca, ...rest } = props;
+
+	const navContextValue = {
+		on: state.on,
+		toggle: toggle,
+		onUpdate: onUpdate,
+		handleOverlayToggle: handleOverlayToggle
+	};
+
+	const navProps = {
+		accountActions,
+		alertActions,
+		sessionActions,
+		...session,
+		...(props as any)
+	};
+
+	const renderPage = (content: React.ReactNode, lazy = false) => (
+		<NavContext.Provider value={navContextValue}>
+			<NavMenu {...navProps} />
+			<Layout {...rest} {...props}>
+				{lazy ? <Suspense fallback={<Loading />}>{content}</Suspense> : content}
+			</Layout>
+			<Footer />
+		</NavContext.Provider>
+	);
+
 	return (
 		// <ServerDataProvider value={props ? serverData : null}>
 		<Routes>
-			<Route
-				path="/"
-				element={
-					<Suspense fallback={<Loading />}>
-						<React.Fragment>
-							<NavContext.Provider
-								value={{
-									on: state.on,
-									toggle: toggle,
-									onUpdate: onUpdate,
-									handleOverlayToggle: handleOverlayToggle
-								}}
-							>
-								<NavMenu
-									accountActions={accountActions}
-									alertActions={alertActions}
-									sessionActions={sessionActions}
-									{...session}
-									{...(props as any)}
-								/>
-								<AsyncLayout {...rest} {...props}>
-									<AsyncHome {...props} />
-								</AsyncLayout>
-								<Footer />
-							</NavContext.Provider>
-						</React.Fragment>
-					</Suspense>
-				}
-			/>
-			<Route
-				path="/portfolio"
-				element={
-					<Suspense fallback={<Loading />}>
-						<React.Fragment>
-							<NavContext.Provider
-								value={{
-									on: state.on,
-									toggle: toggle,
-									onUpdate: onUpdate,
-									handleOverlayToggle: handleOverlayToggle
-								}}
-							>
-								<NavMenu
-									accountActions={accountActions}
-									alertActions={alertActions}
-									sessionActions={sessionActions}
-									{...session}
-									{...(props as any)}
-								/>
-								<AsyncLayout {...rest} {...props}>
-									<AsyncPortfolio {...props} />
-								</AsyncLayout>
-								<Footer />
-							</NavContext.Provider>
-						</React.Fragment>
-					</Suspense>
-				}
-			/>
-			<Route
-				path="/about"
-				element={
-					<Suspense fallback={<Loading />}>
-						<React.Fragment>
-							<NavContext.Provider
-								value={{
-									on: state.on,
-									toggle: toggle,
-									onUpdate: onUpdate,
-									handleOverlayToggle: handleOverlayToggle
-								}}
-							>
-								<NavMenu
-									accountActions={accountActions}
-									alertActions={alertActions}
-									sessionActions={sessionActions}
-									{...session}
-									{...(props as any)}
-								/>
-								<AsyncLayout {...rest} {...props}>
-									<AsyncAbout {...props} />
-								</AsyncLayout>
-								<Footer />
-							</NavContext.Provider>
-						</React.Fragment>
-					</Suspense>
-				}
-			/>
-			<Route
-				path="/contact"
-				element={
-					<Suspense fallback={<Loading />}>
-						<React.Fragment>
-							<NavContext.Provider
-								value={{
-									on: state.on,
-									toggle: toggle,
-									onUpdate: onUpdate,
-									handleOverlayToggle: handleOverlayToggle
-								}}
-							>
-								<NavMenu
-									accountActions={accountActions}
-									alertActions={alertActions}
-									sessionActions={sessionActions}
-									{...session}
-									{...(props as any)}
-								/>
-								<AsyncLayout {...rest} {...props}>
-									<AsyncContact {...props} />
-								</AsyncLayout>
-								<Footer />
-							</NavContext.Provider>
-						</React.Fragment>
-					</Suspense>
-				}
-			/>
-			<Route
-				path="/*"
-				element={
-					<Suspense fallback={<Loading />}>
-						<React.Fragment>
-							<NavContext.Provider
-								value={{
-									on: state.on,
-									toggle: toggle,
-									onUpdate: onUpdate,
-									handleOverlayToggle: handleOverlayToggle
-								}}
-							>
-								<NavMenu
-									accountActions={accountActions}
-									alertActions={alertActions}
-									sessionActions={sessionActions}
-									{...session}
-									{...(props as any)}
-								/>
-								<AsyncLayout {...rest} {...props}>
-									<AsyncNotFound {...props} />
-								</AsyncLayout>
-								<Footer />
-							</NavContext.Provider>
-						</React.Fragment>
-					</Suspense>
-				}
-			/>
+			<Route path="/" element={renderPage(<Home {...props} />)} />
+			<Route path="/portfolio" element={renderPage(<AsyncPortfolio {...props} />, true)} />
+			<Route path="/about" element={renderPage(<AsyncAbout {...props} />, true)} />
+			<Route path="/contact" element={renderPage(<AsyncContact {...props} />, true)} />
+			<Route path="/*" element={renderPage(<AsyncNotFound {...props} />, true)} />
 		</Routes>
 	);
 };

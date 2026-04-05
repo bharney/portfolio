@@ -18,16 +18,22 @@ function renderApp() {
 	if (!root) {
 		throw new Error('Root element not found');
 	}
-	// This code starts up the React app when it runs in a browser. It sets up the routing configuration
-	// and injects the app into a DOM element.
-	const app = createRoot(root);
-	app.render(
+
+	const app = (
 		<BrowserRouter>
 			<Provider store={store}>
 				<App />
 			</Provider>
 		</BrowserRouter>
 	);
+
+	// If SSR content exists, hydrate to reuse it (avoids flash/spinner).
+	// Otherwise, do a fresh client render.
+	if (root.children.length > 0) {
+		hydrateRoot(root, app);
+	} else {
+		createRoot(root).render(app);
+	}
 }
 
 renderApp();

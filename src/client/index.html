@@ -125,6 +125,11 @@
 			.border { border: 1px solid; }
 			.border-light { border-color: #f8f9fa !important; }
 			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
+			/* Bootstrap display utilities used in SSR (nav icons desktop/mobile toggle) */
+			.d-none { display: none !important; }
+			@media (min-width:768px) { .d-md-block { display: block !important; } .d-md-none { display: none !important; } }
+			@media (min-width:992px) { .d-lg-block { display: block !important; } }
+			@media (min-width:1200px) { .d-xl-block { display: block !important; } }
 			/* FontAwesome critical sizing — prevents FOUS (huge unstyled SVGs) before async CSS loads */
 			svg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa { overflow: visible; box-sizing: content-box; }
 			.svg-inline--fa { display: var(--fa-display, inline-block); height: 1em; overflow: visible; vertical-align: -.125em; }
