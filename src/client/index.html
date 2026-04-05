@@ -32,7 +32,7 @@
 			/>
 		</noscript>
 
-		<!-- Critical inline CSS for above-the-fold content (body, nav, hero) -->
+		<!-- Critical inline CSS for above-the-fold content (body, nav, hero, Bootstrap layout) -->
 		<style>
 			/* System font fallbacks with size-adjust to minimize CLS during font swap */
 			@font-face {
@@ -59,6 +59,8 @@
 				descent-override: 27%;
 				line-height-override: normal;
 			}
+			/* Base */
+			*, *::before, *::after { box-sizing: border-box; }
 			html, body {
 				overflow-x: hidden;
 				font-family: 'Playfair Display', 'Playfair Display Fallback', Georgia, serif;
@@ -67,13 +69,47 @@
 			}
 			body { padding-top: 70px; }
 			#root { min-height: 100vh; }
-			/* Nav skeleton to prevent layout shift */
-			#custom-nav, .navbar {
+			/* Bootstrap grid (above-the-fold classes only) */
+			.container { width: 100%; padding-right: .75rem; padding-left: .75rem; margin-right: auto; margin-left: auto; }
+			@media (min-width:576px) { .container { max-width: 540px; } }
+			@media (min-width:768px) { .container { max-width: 720px; } }
+			@media (min-width:992px) { .container { max-width: 960px; } }
+			@media (min-width:1200px) { .container { max-width: 1333px; } }
+			@media (min-width:1400px) { .container { max-width: 1333px; } }
+			.row { display: flex; flex-wrap: wrap; margin-right: -.75rem; margin-left: -.75rem; }
+			.col, .col-md, .col-xxl-10, .col-xxl-8, .col-lg-10 { position: relative; width: 100%; padding-right: .75rem; padding-left: .75rem; }
+			@media (min-width:992px) { .col-lg-10 { flex: 0 0 auto; width: 83.333%; } }
+			@media (min-width:1400px) { .col-xxl-10 { flex: 0 0 auto; width: 83.333%; } .col-xxl-8 { flex: 0 0 auto; width: 66.667%; } }
+			/* Bootstrap spacing (above-the-fold only) */
+			.pt-5 { padding-top: 3rem !important; }
+			.pb-2 { padding-bottom: .5rem !important; }
+			.my-4 { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
+			.mb-4 { margin-bottom: 1.5rem !important; }
+			.w-25 { width: 25% !important; }
+			/* Navbar skeleton (prevents CLS before stylesheet loads) */
+			.navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: .5rem 1rem; position: relative; }
+			.fixed-top { position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
+			.navbar-dark { color: rgba(255,255,255,.55); }
+			.bg-dark { background-color: #343a40 !important; }
+			.navbar-brand { color: #e9ecef; font-size: 1.5rem; text-decoration: none; white-space: nowrap; padding-top: .3125rem; padding-bottom: .3125rem; margin-right: 1rem; }
+			.navbar-collapse { flex-basis: 100%; flex-grow: 1; align-items: center; }
+			.collapse:not(.show) { display: none; }
+			@media (min-width:768px) { .navbar-expand-md .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-md .navbar-toggler { display: none; } }
+			.navbar-nav { display: flex; flex-direction: column; padding-left: 0; margin-bottom: 0; list-style: none; }
+			@media (min-width:768px) { .navbar-nav { flex-direction: row; } }
+			.nav-link { display: block; padding: .5rem 1rem; color: #e9ecef; text-decoration: none; font-size: 1.5rem; }
+			.nav-item { list-style: none; }
+			.me-auto { margin-right: auto !important; }
+			#custom-nav {
 				font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
 				font-size: 1.5rem;
 				color: #e9ecef;
+				padding-top: 1em;
+				padding-bottom: 1em;
+				border-bottom: 1px solid #131517;
+				box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
 			}
-			/* Hero container: fixed min-height prevents CLS when font loads */
+			/* Hero: fixed dimensions + contain to prevent CLS */
 			.hero {
 				font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 				font-weight: 600;
@@ -81,8 +117,13 @@
 				color: #e9ecef;
 				min-height: 152px;
 				line-height: 1.1;
+				contain: layout style;
 			}
 			@media (max-width: 767px) { .hero { font-size: 3rem; min-height: 80px; } }
+			.hero-border { border-width: 5px !important; }
+			.hero-text { color: #e9ecef; font-size: 2rem; }
+			.border { border: 1px solid; }
+			.border-light { border-color: #f8f9fa !important; }
 			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
 		</style>
 	</head>

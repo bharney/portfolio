@@ -3,7 +3,8 @@ import {
 	Configuration,
 	NormalModuleReplacementPlugin,
 	ProvidePlugin,
-	LoaderOptionsPlugin
+	LoaderOptionsPlugin,
+	Compilation
 } from 'webpack';
 import 'webpack-dev-server';
 import { resolve } from 'path';
@@ -221,7 +222,26 @@ function createClientConfig(env: Env): Configuration {
 				chunkFilename: 'css/[id].[contenthash].css'
 			}),
 			(env.hot && new ReactRefreshPlugin()) as any, // casting so tsc will stop complaining
-			env.analyze && new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true })
+			env.analyze && new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }),
+			// Make extracted CSS non-render-blocking (critical CSS is already inlined in index.html)
+			env.production && {
+				apply(compiler: any) {
+					compiler.hooks.compilation.tap('AsyncCssPlugin', (compilation: any) => {
+						HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync(
+							'AsyncCssPlugin',
+							(data: any, cb: any) => {
+								[...data.headTags, ...data.bodyTags].forEach((tag: any) => {
+									if (tag.tagName === 'link' && tag.attributes && tag.attributes.rel === 'stylesheet') {
+										tag.attributes.media = 'print';
+										tag.attributes.onload = "this.media='all'";
+									}
+								});
+								cb(null, data);
+							}
+						);
+					});
+				}
+			}
 		].filter(Boolean),
 		devServer: {
 			hot: env.hot,

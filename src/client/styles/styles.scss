@@ -110,6 +110,7 @@ main {
 		color: $secondary;
 		min-height: 152px;
 		line-height: 1.1;
+		contain: layout style;
 
 		@media (max-width: 767px) {
 			font-size: 3rem;
