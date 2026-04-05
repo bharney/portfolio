@@ -1,12 +1,20 @@
 import * as React from 'react';
 import chicagoInABox from '../../images/ChicagoInABox.png';
+import chicagoInABoxWebp from '../../images/ChicagoInABox.webp';
 import coletteMills from '../../images/ColetteMills.jpg';
+import coletteMillsWebp from '../../images/ColetteMills.webp';
 import goSurfer from '../../images/GoSurfer.jpg';
+import goSurferWebp from '../../images/GoSurfer.webp';
 import harneyHall from '../../images/HarneyHall.jpg';
+import harneyHallWebp from '../../images/HarneyHall.webp';
 import jMS from '../../images/JMS.jpg';
+import jMSWebp from '../../images/JMS.webp';
 import pCHFarms from '../../images/PCHFarms.jpg';
+import pCHFarmsWebp from '../../images/PCHFarms.webp';
 import bharneyPortfolio from '../../images/bharneyportfolio.png';
+import bharneyPortfolioWebp from '../../images/bharneyportfolio.webp';
 import yogamariemills from '../../images/yogamariemills.png';
+import yogamariemillsWebp from '../../images/yogamariemills.webp';
 import { Link } from 'react-router-dom';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -15,6 +23,7 @@ import OptimizedImage from '../Common/OptimizedImage';
 
 interface PortfolioItem {
 	src: string;
+	webpSrc: string;
 	alt: string;
 	title: string;
 	link: string;
@@ -24,6 +33,7 @@ interface PortfolioItem {
 const portfolioItems: PortfolioItem[] = [
 	{
 		src: chicagoInABox,
+		webpSrc: chicagoInABoxWebp,
 		alt: 'Chicago in a box',
 		title: 'Chicago In A Box',
 		link: 'https://chicagoinabox.com/',
@@ -31,6 +41,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: coletteMills,
+		webpSrc: coletteMillsWebp,
 		alt: 'Collete Mills',
 		title: 'Collete Mills',
 		link: 'https://colettemills.com/',
@@ -38,6 +49,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: goSurfer,
+		webpSrc: goSurferWebp,
 		alt: 'Go Surfer',
 		title: 'Go Surfer',
 		link: '#',
@@ -45,6 +57,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: harneyHall,
+		webpSrc: harneyHallWebp,
 		alt: 'Harney Hall Wedding',
 		title: 'Harney Hall Wedding',
 		link: 'https://harneyhall.azurewebsites.net/',
@@ -52,6 +65,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: jMS,
+		webpSrc: jMSWebp,
 		alt: 'JMS Auto Repair',
 		title: 'JMS Auto Repair',
 		link: 'https://jmsautorepair.com/',
@@ -59,6 +73,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: pCHFarms,
+		webpSrc: pCHFarmsWebp,
 		alt: 'PCH Farms Collective',
 		title: 'PCH Farms Collective',
 		link: 'https://pchfarms.azurewebsites.net/',
@@ -66,6 +81,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: bharneyPortfolio,
+		webpSrc: bharneyPortfolioWebp,
 		alt: 'bharney Portfolio',
 		title: 'bharney Portfolio',
 		link: 'https://parallax-afghd4g2byafgqeu.westus-01.azurewebsites.net/',
@@ -73,6 +89,7 @@ const portfolioItems: PortfolioItem[] = [
 	},
 	{
 		src: yogamariemills,
+		webpSrc: yogamariemillsWebp,
 		alt: 'Yoga Marie Mills',
 		title: 'Yoga Marie Mills',
 		link: 'https://yogamariemills.azurewebsites.net/',
@@ -91,6 +108,7 @@ export default class Portfolio extends React.Component<{}, {}> {
 								<div className="card shadow-sm">
 									<OptimizedImage
 										src={item.src}
+										webpSrc={item.webpSrc}
 										alt={item.alt}
 										className="img-fluid rounded-top"
 										width={600}

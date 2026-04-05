@@ -2,6 +2,8 @@ import * as React from 'react';
 
 interface OptimizedImageProps {
 	src: string;
+	/** Pre-resolved WebP source URL (imported via webpack). If not provided, falls back to src only. */
+	webpSrc?: string;
 	alt: string;
 	className?: string;
 	width?: number;
@@ -20,21 +22,20 @@ interface OptimizedImageProps {
  * - Explicit width/height to prevent Cumulative Layout Shift (CLS)
  * - WebP source with original format fallback via <picture>
  *
- * To use WebP: place a `.webp` version of each image alongside the original.
- * The component will automatically try to serve the WebP variant first.
+ * Usage: Import both the original and .webp image, then pass both:
+ *   import photo from './photo.jpg';
+ *   import photoWebp from './photo.webp';
+ *   <OptimizedImage src={photo} webpSrc={photoWebp} alt="..." />
  */
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
 	src,
+	webpSrc,
 	alt,
 	className,
 	width,
 	height,
 	priority = false
 }) => {
-	// Derive a WebP source path from the original
-	const webpSrc = src.replace(/\.(jpg|jpeg|png|gif)$/i, '.webp');
-	const hasWebp = webpSrc !== src; // only use <picture> if format can differ
-
 	const imgProps: React.ImgHTMLAttributes<HTMLImageElement> = {
 		src,
 		alt,
@@ -46,7 +47,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 		...(priority ? { fetchPriority: 'high' as any } : {})
 	};
 
-	if (hasWebp) {
+	if (webpSrc) {
 		return (
 			<picture>
 				<source srcSet={webpSrc} type="image/webp" />

@@ -74,19 +74,16 @@ function createServerConfig(_env: Env): Configuration {
 					use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
 				},
 				{
-					// file-loader config must match client's (except 'emitFile' property)
-					test: /\.(jpg|png|gif|svg)$/,
-					use: {
-						loader: 'file-loader',
-						options: {
-							outputPath: 'images',
-							name: '[name].[contenthash].[ext]',
-							emitFile: false
-						}
+					// Match client's asset module config (except emitFile: false equivalent)
+					test: /\.(jpg|jpeg|png|gif|svg|webp|avif)$/,
+					type: 'asset/resource',
+					generator: {
+						filename: 'images/[name].[contenthash][ext]',
+						emit: false  // server doesn't need to emit image files; client already does
 					}
 				},
 				{
-					test: /\.(jpg|jpeg|png|gif|woff|woff2|eot|ttf|svg)(\?|$)/,
+					test: /\.(woff|woff2|eot|ttf)(\?|$)/,
 					use: 'url-loader?limit=100000'
 				}
 			]
