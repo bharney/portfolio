@@ -5,6 +5,10 @@
 	"main": "./dist/app.js",
 	"author": "bharney0",
 	"license": "MIT",
+	"sideEffects": [
+		"*.css",
+		"*.scss"
+	],
 	"workspaces": [
 		"server",
 		"client"

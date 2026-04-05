@@ -101,6 +101,7 @@ export default class Portfolio extends React.Component<{}, {}> {
 										<Link
 											className="icon-link icon-link-hover"
 											target="_blank"
+											rel="noopener noreferrer"
 											to={item.link}
 										>
 											<h5 className="card-title">{item.title}</h5>

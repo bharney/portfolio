@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
@@ -32,24 +31,31 @@ interface NavProps {
 	toggle: () => void;
 }
 export class NavMenu extends React.Component<NavMenuProps, {}> {
+	private scrollTicking = false;
+
 	componentDidMount() {
-		window.addEventListener('scroll', this.handleScroll);
+		window.addEventListener('scroll', this.handleScroll, { passive: true });
 	}
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
 	}
 
-	handleScroll() {
-		let navbar = ReactDOM.findDOMNode(document.getElementById('custom-nav')) as HTMLElement;
-		let windowsScrollTop = window.pageYOffset;
-		if (windowsScrollTop > 50) {
-			navbar.classList.add('affix');
+	handleScroll = () => {
+		if (this.scrollTicking) return;
+		this.scrollTicking = true;
+		requestAnimationFrame(() => {
+			const navbar = document.getElementById('custom-nav');
+			if (!navbar) { this.scrollTicking = false; return; }
+			const windowsScrollTop = window.pageYOffset;
+			if (windowsScrollTop > 50) {
+				navbar.classList.add('affix');
+			} else {
+				navbar.classList.remove('affix');
+			}
 			navbar.classList.remove('top-nav-collapse');
-		} else {
-			navbar.classList.remove('affix');
-			navbar.classList.remove('top-nav-collapse');
-		}
-	}
+			this.scrollTicking = false;
+		});
+	};
 
 	public render() {
 		const { sessionActions, alertActions, accountActions, isLoading } = this.props;
@@ -121,6 +127,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.facebook.com/brian.harney.12"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Facebook"
 													>
 														<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
 													</a>
@@ -130,6 +138,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://twitter.com/bharney0"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Twitter"
 													>
 														<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
 													</a>
@@ -139,6 +149,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.instagram.com/porkchop.12/"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Instagram"
 													>
 														<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
 													</a>
@@ -148,6 +160,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.linkedin.com/in/bharney0/"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="LinkedIn"
 													>
 														<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
 													</a>
@@ -157,6 +171,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://github.com/bharney"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="GitHub"
 													>
 														<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
 													</a>
@@ -166,6 +182,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://hub.docker.com/u/bharney0"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Docker Hub"
 													>
 														<FontAwesomeIcon icon={faDocker as IconProp} transform="grow-6" />
 													</a>
@@ -175,6 +193,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://stackoverflow.com/users/4740497/bharney"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Stack Overflow"
 													>
 														<FontAwesomeIcon
 															icon={faStackOverflow as IconProp}
@@ -187,6 +207,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://paypal.me/BrianHarney?locale.x=en_US"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="PayPal"
 													>
 														<FontAwesomeIcon icon={faPaypal as IconProp} transform="grow-6" />
 													</a>
@@ -214,6 +236,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.facebook.com/brian.harney.12"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Facebook"
 													>
 														<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
 													</a>
@@ -223,6 +247,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://twitter.com/bharney0"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Twitter"
 													>
 														<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
 													</a>
@@ -232,6 +258,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.instagram.com/porkchop.12/"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="Instagram"
 													>
 														<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
 													</a>
@@ -241,6 +269,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://www.linkedin.com/in/bharney0/"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="LinkedIn"
 													>
 														<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
 													</a>
@@ -250,6 +280,8 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 														className="nav-link root"
 														href="https://github.com/bharney"
 														target="_blank"
+														rel="noopener noreferrer"
+														aria-label="GitHub"
 													>
 														<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
 													</a>

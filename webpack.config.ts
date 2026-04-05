@@ -136,7 +136,9 @@ function createClientConfig(env: Env): Configuration {
 			minimizer: [
 				'...',  // keep default JS minimizer (terser)
 				new CssMinimizerPlugin()  // minify CSS in production
-			]
+			],
+			usedExports: true,  // tree-shake unused exports
+			sideEffects: true   // respect package.json sideEffects field
 		},
 		entry: {
 			index: './Index.tsx'
@@ -208,7 +210,11 @@ function createClientConfig(env: Env): Configuration {
 				} : false
 			}),
 			new CopyWebpackPlugin({
-				patterns: [{ from: 'favicon.ico' }]
+				patterns: [
+					{ from: 'favicon.ico' },
+					{ from: 'robots.txt' },
+					{ from: 'sitemap.xml' }
+				]
 			}),
 			new NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
 			new DefinePlugin({

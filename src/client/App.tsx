@@ -1,6 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import styled from 'styled-components';
-import * as ReactDOM from 'react-dom';
 import Footer from './components/Footer/Footer';
 import NavMenu from './components/Nav/NavMenu';
 import { lazy } from '@loadable/component';
@@ -11,7 +9,7 @@ import { actionCreators as accountActions } from './store/Account';
 import AlertState from './store/Alert';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
-import { Suspense, useContext, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';
 const AsyncHome = lazy(() => import(/* webpackChunkName: "Home" */ './components/Home/Home'));
 const AsyncAbout = lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
@@ -23,9 +21,6 @@ const AsyncLayout = lazy(
 );
 const AsyncNotFound = lazy(
 	() => import(/* webpackChunkName: "NotFound" */ './components/NotFound/NotFound')
-);
-const AsyncHomeLayout = lazy(
-	() => import(/* webpackChunkName: "HomeLayout" */ './components/Layout/HomeLayout')
 );
 const AsyncPortfolio = lazy(
 	() => import(/* webpackChunkName: "Portfolio" */ './components/Portfolio/Portfolio')
@@ -58,7 +53,19 @@ export const App = (props: AppProps) => {
 	}, []);
 
 	useEffect(() => {
-		window.addEventListener('resize', handleResize);
+		let resizeTicking = false;
+		const handleResize = () => {
+			if (resizeTicking) return;
+			resizeTicking = true;
+			requestAnimationFrame(() => {
+				if (window.innerWidth > 767) {
+					setState({ on: false });
+					handleSidebarToggle();
+				}
+				resizeTicking = false;
+			});
+		};
+		window.addEventListener('resize', handleResize, { passive: true });
 		return () => window.removeEventListener('resize', handleResize);
 	}, []);
 	const session = useAppSelector(state => state);
@@ -77,31 +84,27 @@ export const App = (props: AppProps) => {
 		window.scrollTo(0, 0);
 	};
 	const handleSidebarPosition = () => {
-		let sidebar = ReactDOM.findDOMNode(document.getElementById('sidebar')) as HTMLElement;
-		let bounding = sidebar.getBoundingClientRect();
-		let offset = bounding.top + document.body.scrollTop;
+		const sidebar = document.getElementById('sidebar');
+		if (!sidebar) return;
+		const bounding = sidebar.getBoundingClientRect();
+		const offset = bounding.top + document.body.scrollTop;
 		let totalOffset = (offset - 100) * -1;
 		totalOffset = totalOffset < 0 ? 0 : totalOffset;
-		(sidebar as HTMLElement).style.top = totalOffset + 'px';
-		document.getElementsByTagName('html')[0].style.overflowY = 'hidden';
+		sidebar.style.top = totalOffset + 'px';
+		document.documentElement.style.overflowY = 'hidden';
 	};
 	const handleSidebarToggle = () => {
-		let sidebar = ReactDOM.findDOMNode(document.getElementById('sidebar'));
+		const sidebar = document.getElementById('sidebar');
 		if (sidebar) {
-			(sidebar as HTMLElement).removeAttribute('style');
+			sidebar.removeAttribute('style');
 		}
-		document.getElementsByTagName('html')[0].style.overflowY = 'auto';
+		document.documentElement.style.overflowY = 'auto';
 	};
 	const handleOverlayToggle = (e: Event) => {
 		const target = e.target as HTMLElement;
 		if (target.classList.contains('overlay') || target.classList.contains('subMenu')) {
 			setState({ on: false });
 			handleSidebarToggle();
-		}
-	};
-	const handleResize = () => {
-		if (window.innerWidth > 767) {
-			setState({ on: false }), handleSidebarToggle();
 		}
 	};
 
@@ -257,45 +260,5 @@ export const App = (props: AppProps) => {
 		</Routes>
 	);
 };
-
-const Wrapper = styled.div`
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	min-height: 100vh;
-	display: grid;
-	grid-template-areas:
-		'header  header'
-		'sidebar content';
-	grid-template-columns: 200px 1fr;
-	grid-template-rows: 50px 1fr;
-
-	div.header {
-		grid-area: header;
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: center;
-		padding: 8px;
-		font-size: 22px;
-		background-color: #087db3;
-		color: white;
-	}
-	div.sidebar {
-		grid-area: sidebar;
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: right;
-		gap: 36px;
-		padding: 16px;
-		background-color: #bedceb;
-
-		a:visited {
-			text-decoration: none;
-		}
-	}
-	div.content {
-		grid-area: content;
-		padding: 8px;
-	}
-`;
 
 export default App;
