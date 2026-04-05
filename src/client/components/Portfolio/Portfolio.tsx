@@ -6,6 +6,7 @@ import harneyHall from '../../images/HarneyHall.jpg';
 import jMS from '../../images/JMS.jpg';
 import pCHFarms from '../../images/PCHFarms.jpg';
 import bharneyPortfolio from '../../images/bharneyportfolio.png';
+import yogamariemills from '../../images/yogamariemills.png';
 import { Link } from 'react-router-dom';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -218,6 +219,35 @@ export default class Portfolio extends React.Component<{}, {}> {
 								</div>
 							</div>
 						</div>
+							<div className="col">
+								<div className="card shadow-sm">
+									<img
+										src={yogamariemills}
+										className="img-fluid rounded-top"
+										role="img"
+										aria-label="Yoga Marie Mills"
+									></img>
+									<div className="card-body">
+										<Link
+											className="icon-link icon-link-hover"
+											target="_blank"
+											to="https://yogamariemills.azurewebsites.net/"
+										>
+											<h5 className="card-title">Yoga Marie Mills</h5>
+											<FontAwesomeIcon
+												icon={faArrowRight as IconProp}
+												className="bi pb-1"
+												transform="shrink-6"
+												pull="left"
+											/>
+										</Link>
+										<p className="card-text">
+											Yoga Marie Mills is a yoga instructor and wellness coach specializing in
+											holistic health and mindfulness practices.
+										</p>
+									</div>
+								</div>
+							</div>
 					</div>
 				</div>
 			</div>
