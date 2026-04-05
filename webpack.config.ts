@@ -13,6 +13,8 @@ import { merge } from 'webpack-merge';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 // import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const autoprefixer = require('autoprefixer');
 interface Env {
@@ -130,7 +132,11 @@ function createClientConfig(env: Env): Configuration {
 		optimization: {
 			splitChunks: {
 				chunks: 'all'
-			}
+			},
+			minimizer: [
+				'...',  // keep default JS minimizer (terser)
+				new CssMinimizerPlugin()  // minify CSS in production
+			]
 		},
 		entry: {
 			index: './Index.tsx'
@@ -149,18 +155,28 @@ function createClientConfig(env: Env): Configuration {
 					use: { loader: 'babel-loader', options: babelConfig }
 				},
 				{
-					test: /\.(jpg|png|gif|svg)$/,
-					use: {
-						loader: 'file-loader',
-						options: {
-							outputPath: 'images',
-							name: '[name].[contenthash].[ext]'
+					// Use webpack 5 asset modules instead of file-loader
+					test: /\.(jpg|jpeg|png|gif|svg|webp|avif)$/,
+					type: 'asset',
+					parser: {
+						dataUrlCondition: {
+							maxSize: 8 * 1024 // 8KB - inline small images as data URLs
 						}
+					},
+					generator: {
+						filename: 'images/[name].[contenthash][ext]'
 					}
 				},
 				{
 					test: /\.(sass|css|scss)$(\?|$)/,
-					use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+					use: [
+						// In production, extract CSS to separate files for caching & parallel loading
+						// In dev, use style-loader for HMR
+						env.production ? MiniCssExtractPlugin.loader : 'style-loader',
+						'css-loader',
+						'postcss-loader',
+						'sass-loader'
+					]
 				}
 			]
 		},
@@ -179,7 +195,17 @@ function createClientConfig(env: Env): Configuration {
 				}
 			}),
 			new HtmlWebpackPlugin({
-				template: './index.html'
+				template: './index.html',
+				minify: env.production ? {
+					collapseWhitespace: true,
+					removeComments: true,
+					removeRedundantAttributes: true,
+					removeScriptTypeAttributes: true,
+					removeStyleLinkTypeAttributes: true,
+					useShortDoctype: true,
+					minifyCSS: true,
+					minifyJS: true
+				} : false
 			}),
 			new CopyWebpackPlugin({
 				patterns: [{ from: 'favicon.ico' }]
@@ -189,6 +215,11 @@ function createClientConfig(env: Env): Configuration {
 				__SERVER__: JSON.stringify(false)
 			}),
 			new LoadablePlugin(),
+			// Extract CSS into separate files in production for better caching
+			env.production && new MiniCssExtractPlugin({
+				filename: 'css/[name].[contenthash].css',
+				chunkFilename: 'css/[id].[contenthash].css'
+			}),
 			(env.hot && new ReactRefreshPlugin()) as any // casting so tsc will stop complaining
 		].filter(Boolean),
 		devServer: {

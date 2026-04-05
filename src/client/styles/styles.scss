@@ -11,7 +11,8 @@
 // end slider
 
 @import './colors.scss';
-@import url('https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=swap'); /*/*  ----------------------- BODY --------------------------- */
+/* Google Fonts are now loaded via <link> in index.html with preconnect + font-display:swap */
+/*/*  ----------------------- BODY --------------------------- */
 html,
 body {
 	overflow-x: hidden; /* Prevent scroll on narrow devices */

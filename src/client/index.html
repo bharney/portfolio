@@ -6,6 +6,52 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<base href="/" />
 		<title>bharney.com</title>
+		<meta name="description" content="Brian Harney's software portfolio — projects, skills, and experience in full-stack web development." />
+		<meta name="theme-color" content="#343a40" />
+
+		<!-- Preconnect to Google Fonts for faster font loading -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Load Google Fonts with font-display=swap to avoid FOIT -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=swap"
+			media="print"
+			onload="this.media='all'"
+		/>
+		<noscript>
+			<link
+				rel="stylesheet"
+				href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=swap"
+			/>
+		</noscript>
+
+		<!-- Critical inline CSS for above-the-fold content (body, nav, hero) -->
+		<style>
+			html, body {
+				overflow-x: hidden;
+				font-family: 'Playfair Display', serif;
+				background-color: #343a40;
+				margin: 0;
+			}
+			body { padding-top: 70px; }
+			#root { min-height: 100vh; }
+			/* Nav skeleton to prevent layout shift */
+			#custom-nav, .navbar {
+				font-family: 'Fjalla One', sans-serif;
+				font-size: 1.5rem;
+				color: #e9ecef;
+			}
+			/* Hero text skeleton */
+			.hero {
+				font-family: 'Fira Sans Condensed', sans-serif;
+				font-weight: 600;
+				font-size: 6rem;
+				color: #e9ecef;
+			}
+			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
+		</style>
 	</head>
 	<body>
 		<div id="root"></div>
