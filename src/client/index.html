@@ -18,17 +18,18 @@
 		<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/fjallaone/v16/Yq6R-LCAWCX3-6Ky7FAFrOF6kg.woff2" />
 		<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/playfairdisplay/v40/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtM.woff2" />
 
-		<!-- Load Google Fonts with font-display=swap to avoid FOIT -->
+		<!-- Load Google Fonts with font-display=optional — only use the font if it's already cached,
+		     otherwise stick with the system-font fallback for first paint (zero layout shift). -->
 		<link
 			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=swap"
+			href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=optional"
 			media="print"
 			onload="this.media='all'"
 		/>
 		<noscript>
 			<link
 				rel="stylesheet"
-				href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=swap"
+				href="https://fonts.googleapis.com/css2?&family=Fira+Sans+Condensed:wght@600&family=Fjalla+One&family=Playfair+Display&display=optional"
 			/>
 		</noscript>
 
@@ -95,6 +96,8 @@
 			.navbar-collapse { flex-basis: 100%; flex-grow: 1; align-items: center; }
 			.collapse:not(.show) { display: none; }
 			@media (min-width:768px) { .navbar-expand-md .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-md .navbar-toggler { display: none; } }
+			.navbar-toggler { padding: .25rem .75rem; font-size: 1.25rem; line-height: 1; background-color: transparent; border: 1px solid rgba(255,255,255,.1); border-radius: .375rem; color: rgba(255,255,255,.55); }
+			.navbar-toggler-icon { display: inline-block; width: 1.5em; height: 1.5em; vertical-align: middle; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: center; background-size: 100%; }
 			.navbar-nav { display: flex; flex-direction: column; padding-left: 0; margin-bottom: 0; list-style: none; }
 			@media (min-width:768px) { .navbar-nav { flex-direction: row; } }
 			.nav-link { display: block; padding: .5rem 1rem; color: #e9ecef; text-decoration: none; font-size: 1.5rem; }
@@ -108,7 +111,14 @@
 				padding-bottom: 1em;
 				border-bottom: 1px solid #131517;
 				box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
+				min-height: 70px;
+				contain: layout style;
 			}
+			.nav-links {
+				min-height: 46px;
+				align-items: center;
+			}
+			.mobile-nav { flex-direction: row; }
 			/* Hero: fixed dimensions + contain to prevent CLS */
 			.hero {
 				font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
@@ -125,11 +135,17 @@
 			.border { border: 1px solid; }
 			.border-light { border-color: #f8f9fa !important; }
 			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
+			/* Landing section — lock text size before stylesheet loads */
+			.text-white { color: #fff !important; }
+			.landing p { font-size: 1.5rem; }
+			.gy-4 > * { padding-top: .75rem; padding-bottom: .75rem; }
+			@media (min-width:768px) { .col-md { flex: 1 0 0%; } }
 			/* Bootstrap display utilities used in SSR (nav icons desktop/mobile toggle) */
 			.d-none { display: none !important; }
+			.d-inline-flex { display: inline-flex !important; }
 			@media (min-width:768px) { .d-md-block { display: block !important; } .d-md-none { display: none !important; } }
-			@media (min-width:992px) { .d-lg-block { display: block !important; } }
-			@media (min-width:1200px) { .d-xl-block { display: block !important; } }
+			@media (min-width:992px) { .d-lg-block { display: block !important; } .d-lg-none { display: none !important; } }
+			@media (min-width:1200px) { .d-xl-block { display: block !important; } .d-xl-none { display: none !important; } }
 			/* FontAwesome critical sizing — prevents FOUS (huge unstyled SVGs) before async CSS loads */
 			svg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa { overflow: visible; box-sizing: content-box; }
 			.svg-inline--fa { display: var(--fa-display, inline-block); height: 1em; overflow: visible; vertical-align: -.125em; }
