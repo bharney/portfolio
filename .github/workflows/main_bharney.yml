@@ -14,10 +14,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
@@ -46,6 +46,23 @@ jobs:
         with:
           name: node-app
 
+      # Take app offline to release iisnode file locks (prevents 409 Conflict).
+      # Deploying app_offline.htm makes IIS shut down the app pool immediately.
+      - name: Take app offline
+        shell: bash
+        run: |
+          # Extract SCM credentials from the publish profile XML
+          PUBLISH_PROFILE='${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF2FE9E82861444ABC82A13DF99225FD }}'
+          USER=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
+          PASS=$(echo "$PUBLISH_PROFILE" | grep -oP 'userPWD="\K[^"]+' | head -1)
+          # Upload app_offline.htm via Kudu VFS API
+          curl -sS -X PUT \
+            -u "$USER:$PASS" \
+            -H "If-Match: *" \
+            -H "Content-Type: text/html" \
+            -d "<html><body><h1>Updating... please wait.</h1></body></html>" \
+            "https://bharney.scm.azurewebsites.net/api/vfs/site/wwwroot/app_offline.htm"
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -54,3 +71,14 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF2FE9E82861444ABC82A13DF99225FD }}
           package: .
+
+      # Bring app back online by removing app_offline.htm
+      - name: Bring app online
+        shell: bash
+        run: |
+          PUBLISH_PROFILE='${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF2FE9E82861444ABC82A13DF99225FD }}'
+          USER=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
+          PASS=$(echo "$PUBLISH_PROFILE" | grep -oP 'userPWD="\K[^"]+' | head -1)
+          curl -sS -X DELETE \
+            -u "$USER:$PASS" \
+            "https://bharney.scm.azurewebsites.net/api/vfs/site/wwwroot/app_offline.htm"
