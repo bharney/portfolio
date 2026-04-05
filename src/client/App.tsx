@@ -46,11 +46,6 @@ export const NavContext = React.createContext({
 export const AuthContext = React.createContext(null);
 export const App = (props: AppProps) => {
 	const [state, setState] = useState({ on: false });
-	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			void import('bootstrap/dist/js/bootstrap.bundle.min.js');
-		}
-	}, []);
 
 	useEffect(() => {
 		let resizeTicking = false;

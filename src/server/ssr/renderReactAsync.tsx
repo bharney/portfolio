@@ -5,18 +5,12 @@ import { StaticRouter } from 'react-router-dom/server';
 import fs from 'fs';
 import { HTML_TEMPLATE_PATH } from '../configuration';
 import { PrerenderData } from '../../shared/PrerenderedData';
-import { ServerStyleSheet } from 'styled-components';
 import path from 'path';
 import { ChunkExtractor } from '@loadable/server';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import { rootReducers } from '../../client/store';
-
-interface RenderedApp {
-	reactHtml: string;
-	styleTags: string;
-}
 /**
  * Renders the react App as a html string.
  * @param url The render url. It will be injected in the react router so it can render the corresponding route.
@@ -45,52 +39,41 @@ export async function renderReactAsync(url: string, prerenderedObject?: unknown)
 	);
 
 	/*
-        render the react html content and the styled-component style sheet as string.
-        without prerendering styled-components, the page will flash a styleless version of it
+        Render the react content as an HTML string.
      */
 
-	const renderedApp = renderToStringWithStyles(WrappedApp);
+	const reactHtml = renderToStringWithChunks(WrappedApp);
 
 	// finally combine all parts together
 
-	const renderedHtml = buildHtml(staticHtmlContent, renderedApp, dataElement);
+	const renderedHtml = buildHtml(staticHtmlContent, reactHtml, dataElement);
 
 	return renderedHtml;
 }
 
-function buildHtml(templateHtml: string, renderedApp: RenderedApp, dataTag: string) {
-	const pattern = /<head>|<div\sid="root">/g;
+function buildHtml(templateHtml: string, reactHtml: string, dataTag: string) {
+	const pattern = /<div\sid="root">/g;
 
 	return templateHtml.replace(pattern, match => {
-		if (match === '<head>') {
-			return `<head>${renderedApp.styleTags}`;
-		}
-
 		if (match === '<div id="root">') {
-			return `${dataTag}<div id="root">${renderedApp.reactHtml}`;
+			return `${dataTag}<div id="root">${reactHtml}`;
 		}
 
 		return match;
 	});
 }
 
-function renderToStringWithStyles(component: JSX.Element): RenderedApp {
-	const sheet = new ServerStyleSheet();
+function renderToStringWithChunks(component: JSX.Element): string {
 	try {
-		// In SSR, using react-router-dom/BrowserRouter will throw an exception.
-		// Instead, we use react-router-dom/server/StaticRouter.
-		// In the client compilation, we still use BrowserRouter (see: src/client/Index.tsx)
 		const clientStatsPath = path.join(__dirname, 'public', 'loadable-stats.json');
 		const serverStatsPath = path.join(__dirname, 'loadable-stats.json');
 		const statsFile = fs.existsSync(clientStatsPath) ? clientStatsPath : serverStatsPath;
 		const extractor = new ChunkExtractor({ statsFile, entrypoints: ['index'] });
-		const jsx = extractor.collectChunks(sheet.collectStyles(component));
+		const jsx = extractor.collectChunks(component);
 
-		return {
-			reactHtml: renderToString(jsx),
-			styleTags: sheet.getStyleTags()
-		};
-	} finally {
-		sheet.seal();
+		return renderToString(jsx);
+	} catch (e) {
+		console.error('SSR render error:', e);
+		return '';
 	}
 }
