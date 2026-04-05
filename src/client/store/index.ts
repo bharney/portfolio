@@ -1,10 +1,7 @@
-import { reducer as formReducer } from 'redux-form';
 import * as Account from './Account';
 import Alert, { AlertState } from './Alert';
-import * as Counter from './Counter';
 import * as Profile from './Profile';
 import * as Session from './Session';
-import * as WeatherForecasts from './WeatherForecasts';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { AnyAction, combineReducers } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -14,8 +11,6 @@ export interface ApplicationState {
 	alert: AlertState;
 	account: Account.AccountState;
 	profile: Profile.ProfileState;
-	counter: Counter.CounterState;
-	weatherForecasts: WeatherForecasts.WeatherForecastsState;
 }
 // Whenever an action is dispatched, Redux will update each top-level application state property using
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
@@ -24,10 +19,7 @@ export const reducers = {
 	session: Session.reducer,
 	alert: Alert.reducer,
 	account: Account.reducer,
-	form: formReducer,
-	profile: Profile.reducer,
-	counter: Counter.reducer,
-	weatherForecasts: WeatherForecasts.reducer
+	profile: Profile.reducer
 };
 
 export const rootReducers = combineReducers(reducers);
