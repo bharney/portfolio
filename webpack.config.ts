@@ -93,6 +93,12 @@ function createServerConfig(_env: Env): Configuration {
 			new CleanWebpackPlugin({
 				cleanOnceBeforeBuildPatterns: ['!public/**']
 			}),
+			new CopyWebpackPlugin({
+				patterns: [
+					// web.config must be at the app root (dist/) for IIS/iisnode, not in dist/public/
+					{ from: resolve(__dirname, 'web.config'), to: resolve(__dirname, 'dist') }
+				]
+			}),
 			new DefinePlugin({
 				__Server__: JSON.stringify(true)
 			}),
@@ -209,8 +215,7 @@ function createClientConfig(env: Env): Configuration {
 				patterns: [
 					{ from: 'favicon.ico' },
 					{ from: 'robots.txt' },
-					{ from: 'sitemap.xml' },
-					{ from: 'web.config' }
+					{ from: 'sitemap.xml' }
 				]
 			}),
 			new NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
