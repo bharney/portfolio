@@ -54,8 +54,14 @@
 			@media (min-width:1200px) { .container { max-width: 1333px; } }
 			@media (min-width:1400px) { .container { max-width: 1333px; } }
 			.row { display: flex; flex-wrap: wrap; margin-right: -.75rem; margin-left: -.75rem; }
-			.col, .col-md, .col-xxl-10, .col-xxl-8, .col-lg-10 { position: relative; width: 100%; padding-right: .75rem; padding-left: .75rem; }
-			@media (min-width:992px) { .col-lg-10 { flex: 0 0 auto; width: 83.333%; } }
+			.col, .col-md, .col-xxl-10, .col-xxl-8, .col-lg-10, .col-lg-9, .col-lg-3, .col-12, .col-8 { position: relative; width: 100%; padding-right: .75rem; padding-left: .75rem; }
+			.col-12 { flex: 0 0 auto; width: 100%; }
+			@media (min-width:768px) { .col-md-12 { flex: 0 0 auto; width: 100%; } }
+			@media (min-width:992px) {
+				.col-lg-9 { flex: 0 0 auto; width: 75%; }
+				.col-lg-10 { flex: 0 0 auto; width: 83.333%; }
+				.col-lg-3 { flex: 0 0 auto; width: 25%; }
+			}
 			@media (min-width:1400px) { .col-xxl-10 { flex: 0 0 auto; width: 83.333%; } .col-xxl-8 { flex: 0 0 auto; width: 66.667%; } }
 			/* Bootstrap spacing (above-the-fold only) */
 			.pt-5 { padding-top: 3rem !important; }
@@ -111,11 +117,25 @@
 			.border { border: 1px solid; }
 			.border-light { border-color: #f8f9fa !important; }
 			main { color: #ffffff; background-color: #343a40; padding-top: 3%; }
+			/* main.container and nav container width overrides — must match stylesheet to prevent CLS */
+			@media (max-width: 1199px) {
+				main.container { width: 100%; max-width: none; }
+				#custom-nav > div.container { width: 100%; max-width: none; }
+			}
+			@media (max-width: 991px) { main { overflow-x: hidden; } .content { padding-top: 1em; }
+				.row-offcanvas { position: relative; }
+				.row-offcanvas-right { right: 0; min-height: 54vh; }
+				.row-offcanvas-right .sidebar-offcanvas { right: -100%; }
+				.sidebar-offcanvas { position: absolute; top: 0; width: 68%; }
+			}
 			/* Landing section — lock text size before stylesheet loads */
 			.text-white { color: #fff !important; }
 			.landing p { font-size: 1.5rem; }
 			.gy-4 > * { padding-top: .75rem; padding-bottom: .75rem; }
 			@media (min-width:768px) { .col-md { flex: 1 0 0%; } }
+			/* Sidebar list-group (visible on desktop ≥992px) */
+			.list-group { display: flex; flex-direction: column; padding-left: 0; margin-bottom: 0; border-radius: .375rem; }
+			.list-group-item { position: relative; display: block; padding: .5rem 1rem; color: #e9ecef; text-decoration: none; background-color: transparent; border: 1px solid rgba(255,255,255,.125); }
 			/* Bootstrap display utilities used in SSR (nav icons desktop/mobile toggle) */
 			.d-none { display: none !important; }
 			.d-inline-flex { display: inline-flex !important; }
