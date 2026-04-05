@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import { errorMiddleware } from './middleware/errorMiddleware';
 import { reactMiddleware } from './middleware/reactMiddleware';
 import { useRouting } from './middleware/routing';
@@ -10,9 +11,21 @@ import * as reactAsync from './ssr/renderReactAsync';
 export function createServer() {
 	const server = express();
 
+	// Enable gzip/deflate compression for all responses
+	server.use(compression());
+
 	server.use(
 		express.static(PUBLIC_DIR_PATH, {
-			index: false // we don't want the static middleware to serve index.html. The SSR content won't be served otherwise.
+			index: false, // we don't want the static middleware to serve index.html. The SSR content won't be served otherwise.
+			// Hashed files (js/css with chunkhash) get immutable long-term caching.
+			// Non-hashed files (favicon, robots.txt, sitemap) get a short cache with revalidation.
+			setHeaders(res, filePath) {
+				if (/\.[a-f0-9]{16,}\.(js|css)$/.test(filePath)) {
+					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+				} else {
+					res.setHeader('Cache-Control', 'public, max-age=3600');
+				}
+			}
 		})
 	);
 

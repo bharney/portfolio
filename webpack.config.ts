@@ -209,7 +209,8 @@ function createClientConfig(env: Env): Configuration {
 				patterns: [
 					{ from: 'favicon.ico' },
 					{ from: 'robots.txt' },
-					{ from: 'sitemap.xml' }
+					{ from: 'sitemap.xml' },
+					{ from: 'web.config' }
 				]
 			}),
 			new NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
