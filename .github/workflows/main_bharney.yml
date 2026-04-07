@@ -33,12 +33,12 @@ jobs:
           name: node-app
           path: .
 
-  deploy-to-staging:
+  deploy-to-alt:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Staging'
-      url: ${{ steps.deploy-to-staging.outputs.webapp-url }}
+      name: 'alt'
+      url: ${{ steps.deploy-to-alt.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -46,18 +46,18 @@ jobs:
         with:
           name: node-app
 
-      - name: 'Deploy to Azure Web App staging slot'
+      - name: 'Deploy to Azure Web App alt slot'
         uses: azure/webapps-deploy@v2
-        id: deploy-to-staging
+        id: deploy-to-alt
         with:
           app-name: 'bharney'
-          slot-name: 'staging'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_STAGING }}
+          slot-name: 'alt'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_alt }}
           package: .
 
   swap-to-production:
     runs-on: ubuntu-latest
-    needs: deploy-to-staging
+    needs: deploy-to-alt
     environment:
       name: 'Production'
 
@@ -67,12 +67,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Swap staging slot to production
+      - name: Swap alt slot to production
         uses: azure/cli@v2
         with:
           inlineScript: |
             az webapp deployment slot swap \
               --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --name bharney \
-              --slot staging \
+              --slot alt \
               --target-slot production
