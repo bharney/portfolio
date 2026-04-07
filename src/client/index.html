@@ -28,6 +28,22 @@
 				descent-override: 27%;
 				line-height-override: normal;
 			}
+			@font-face {
+				font-family: 'Big John Fallback';
+				src: local('Arial Black'), local('Arial');
+				size-adjust: 90%;
+				ascent-override: 105%;
+				descent-override: 25%;
+				line-height-override: normal;
+			}
+			@font-face {
+				font-family: 'Slim Joe Fallback';
+				src: local('Arial Narrow'), local('Arial');
+				size-adjust: 88%;
+				ascent-override: 105%;
+				descent-override: 25%;
+				line-height-override: normal;
+			}
 			/* Base */
 			*, *::before, *::after { box-sizing: border-box; }
 			html, body {
@@ -67,7 +83,7 @@
 			.navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: .5rem 1rem; position: relative; }
 			.fixed-top { position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
 			.navbar-light { color: #28a745; }
-			.navbar-brand { font-family: 'Big John', Arial, sans-serif; color: #28a745; font-size: 1.5rem; font-weight: 500; text-decoration: none; white-space: nowrap; padding-top: .3125rem; padding-bottom: .3125rem; margin-right: 1rem; text-shadow: 6px 6px 0 rgba(0,0,0,.1); }
+			.navbar-brand { font-family: 'Big John', 'Big John Fallback', Arial, sans-serif; color: #28a745; font-size: 1.5rem; font-weight: 500; text-decoration: none; white-space: nowrap; padding-top: .3125rem; padding-bottom: .3125rem; margin-right: 1rem; text-shadow: 6px 6px 0 rgba(0,0,0,.1); }
 			.navbar-collapse { flex-basis: 100%; flex-grow: 1; align-items: center; }
 			.collapse:not(.show) { display: none; }
 			@media (min-width:768px) { .navbar-expand-md .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-md .navbar-toggler { display: none; } }
@@ -79,7 +95,7 @@
 			.nav-item { list-style: none; }
 			.me-auto { margin-right: auto !important; }
 			#custom-nav {
-				font-family: 'Fira Sans Condensed', Arial, sans-serif;
+				font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 				font-size: 1.5rem;
 				color: #28a745;
 				background-color: #fff;
@@ -143,9 +159,9 @@
 				margin: 0;
 			}
 			@media (max-width: 767px) { .hero { font-size: 3.5rem; } }
-			.hero-light { font-family: 'Slim Joe', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #28a745; font-weight: 500; text-shadow: 2px 2px 0 rgba(0,0,0,.2); }
-			.hero-apostrophe { font-family: 'Fira Sans Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-weight: 200; color: #28a745; }
-			.hero-bold { font-family: 'Big John', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #28a745; font-weight: 500; text-shadow: 6px 6px 0 rgba(0,0,0,.2); }
+			.hero-light { font-family: 'Slim Joe', 'Slim Joe Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #28a745; font-weight: 500; text-shadow: 2px 2px 0 rgba(0,0,0,.2); }
+			.hero-apostrophe { font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-weight: 200; color: #28a745; }
+			.hero-bold { font-family: 'Big John', 'Big John Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #28a745; font-weight: 500; text-shadow: 6px 6px 0 rgba(0,0,0,.2); }
 			.hero-border { border-width: 2px !important; border-color: #28a745 !important; box-shadow: 2px 2px 0 rgba(0,0,0,.2); }
 			.border { border: 1px solid; }
 			/* Landing card */

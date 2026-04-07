@@ -22,7 +22,7 @@
 	}
 
 	.list-group {
-		font-family: 'Fira Sans Condensed', Arial, sans-serif;
+		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 		background: linear-gradient(to bottom, $green-dark, $green-light);
 		border-radius: 0.375rem;
 		overflow: hidden;

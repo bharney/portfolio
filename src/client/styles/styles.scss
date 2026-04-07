@@ -49,6 +49,32 @@
 	src: url('../fonts/BigJohn.woff') format('woff');
 }
 
+/* Size-adjusted system font fallbacks — keep text metrics stable when optional fonts don't load */
+@font-face {
+	font-family: 'Big John Fallback';
+	src: local('Arial Black'), local('Arial');
+	size-adjust: 90%;
+	ascent-override: 105%;
+	descent-override: 25%;
+	line-height-override: normal;
+}
+@font-face {
+	font-family: 'Slim Joe Fallback';
+	src: local('Arial Narrow'), local('Arial');
+	size-adjust: 88%;
+	ascent-override: 105%;
+	descent-override: 25%;
+	line-height-override: normal;
+}
+@font-face {
+	font-family: 'Fira Sans Condensed Fallback';
+	src: local('Arial Narrow'), local('Arial');
+	size-adjust: 91%;
+	ascent-override: 101%;
+	descent-override: 27%;
+	line-height-override: normal;
+}
+
 /*  ----------------------- BODY --------------------------- */
 html,
 body {
@@ -67,7 +93,7 @@ body {
 /*  ----------------------- NAVIGATION --------------------------- */
 nav {
 	font-size: 1rem;
-	font-family: 'Fira Sans Condensed', Arial, sans-serif;
+	font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 
 	a,
 	.nav-link,
@@ -81,7 +107,7 @@ nav {
 	}
 
 	.navbar-brand {
-		font-family: 'Big John', Arial, sans-serif;
+		font-family: 'Big John', 'Big John Fallback', Arial, sans-serif;
 		color: $green;
 		font-size: 1.5rem;
 		font-weight: 500;
@@ -96,7 +122,7 @@ nav {
 #custom-nav {
 	color: $green-dark;
 	background-color: $light;
-	font-family: 'Fira Sans Condensed', Arial, sans-serif;
+	font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
 	font-size: 1.5rem;
 	padding-top: 1em;
 	padding-bottom: 1em;
@@ -279,7 +305,7 @@ main {
 
 	// Thin green leading words — Slim Joe with subtle shadow
 	.hero-light {
-		font-family: 'Slim Joe', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Slim Joe', 'Slim Joe Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
 		color: $green;
 		text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
@@ -287,14 +313,14 @@ main {
 
 	// Apostrophe styled to match the thin Slim Joe aesthetic
 	.hero-apostrophe {
-		font-family: 'Fira Sans Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 200;
 		color: $green;
 	}
 
 	// Bold green — Big John with shadow
 	.hero-bold {
-		font-family: 'Big John', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Big John', 'Big John Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
 		color: $green;
 		text-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
