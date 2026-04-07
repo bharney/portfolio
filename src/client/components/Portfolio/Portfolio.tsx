@@ -101,7 +101,9 @@ export default class Portfolio extends React.Component<{}, {}> {
 	public render() {
 		return (
 			<div className="album">
-				<div className="container">
+				<div className="mt-4 container">
+					<h2 className="display-4 mb-4 fw-bold">Portfolio.</h2>
+					<p className="lead">A showcase of my work, featuring a variety of projects that I have built over the years. This portfolio reflects my skills and expertise.</p>
 					<div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
 						{portfolioItems.map((item, index) => (
 							<div className="col" key={item.title}>
