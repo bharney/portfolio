@@ -1,21 +1,39 @@
 @import './colors.scss';
 
 #sidebar {
+	margin-top: 3.5em;
 	@media screen and (max-width: 991px) {
 		padding-top: 2em;
 	}
 
+	&.sidebar-home {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		width: auto;
+		min-width: 220px;
+		max-width: 300px;
+		z-index: 10;
+		padding: 0;
+
+		@media (min-width: 1200px) {
+			min-width: 260px;
+		}
+	}
+
 	.list-group {
-		font-family: 'Fjalla One', 'Fjalla One Fallback', Arial, sans-serif;
+		font-family: 'Fira Sans Condensed', Arial, sans-serif;
+		background: linear-gradient(to bottom, $green-dark, $green-light);
+		border-radius: 0.375rem;
+		overflow: hidden;
 		.list-group-item.active {
-			background-color: $primary;
-			border-color: $darker;
+			background-color: rgba($light, 0.15);
+			border-color: rgba($light, 0.2);
 			color: $light;
 		}
 		.list-group-item {
-			--bs-bg-opacity: 1;
-			background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
-			border-color: $darker;
+			background-color: transparent !important;
+			border-color: rgba($light, 0.2);
 			color: $light;
 			padding-top: 0.75em;
 			padding-bottom: 0.75em;
@@ -28,7 +46,7 @@
 		}
 		/* open state */
 		.list-group-item[aria-expanded='true'] {
-			background-color: $dark;
+			background-color: rgba($light, 0.15);
 		}
 
 		.list-group-item[aria-expanded='true']::after {
@@ -39,9 +57,12 @@
 	}
 }
 
+.row-offcanvas {
+	position: relative;
+}
+
 @media screen and (max-width: 991px) {
 	.row-offcanvas {
-		position: relative;
 		transition: transform 0.25s ease-out;
 	}
 
@@ -59,7 +80,7 @@
 	}
 
 	.row-offcanvas-right.active .sidebar-offcanvas {
-		right: -75%; /* 6 columns */
+		right: -82.5%; /* 6 columns */
 	}
 
 	.row-offcanvas-left .sidebar-offcanvas {
@@ -67,7 +88,7 @@
 	}
 
 	.row-offcanvas-left.active .sidebar-offcanvas {
-		left: -75%; /* 6 columns */
+		left: -82.5%; /* 6 columns */
 	}
 
 	.row-offcanvas-right.active {

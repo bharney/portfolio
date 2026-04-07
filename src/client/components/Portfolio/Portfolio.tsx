@@ -101,23 +101,23 @@ export default class Portfolio extends React.Component<{}, {}> {
 	public render() {
 		return (
 			<div className="album">
-				<div className="mt-4 container">
+				<div className="mt-5 container">
 					<h2 className="display-4 mb-4 fw-bold">Portfolio.</h2>
 					<p className="lead">A showcase of my work, featuring a variety of projects that I have built over the years. This portfolio reflects my skills and expertise.</p>
 					<div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
 						{portfolioItems.map((item, index) => (
 							<div className="col" key={item.title}>
-								<div className="card shadow-sm">
+								<div className="card">
 									<OptimizedImage
 										src={item.src}
 										webpSrc={item.webpSrc}
 										alt={item.alt}
 										className="img-fluid rounded-top"
-										width={600}
-										height={400}
+										width={376}
+										height={376}
 										priority={index < 2}  /* Only first 2 images load eagerly (above fold) */
 									/>
-									<div className="card-body border rounded-bottom">
+									<div className="card-body">
 										<Link
 											className="icon-link icon-link-hover"
 											target="_blank"
