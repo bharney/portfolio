@@ -5,7 +5,7 @@ import { useAppSelector } from './store/index';
 import { actionCreators as sessionActions } from './store/Session';
 import { actionCreators as accountActions } from './store/Account';
 import AlertState from './store/Alert';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/bootstrap-custom.scss';
 import './styles/styles.scss';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';

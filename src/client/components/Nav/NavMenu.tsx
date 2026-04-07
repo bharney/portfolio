@@ -64,18 +64,18 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 						!isLoading && (
 							<nav
 								id="custom-nav"
-								className="navbar navbar-expand-md fixed-top navbar-dark bg-dark"
+								className="navbar navbar-expand-md fixed-top navbar-light"
 							>
 								<div className="container nav-links">
 									<Link className="navbar-brand" onClick={onUpdate} to={'/'}>
-										bharney.com
+										bharney
 									</Link>
 									<div className="collapse navbar-collapse" id="navbarsExampleDefault">
 										<ul className="navbar-nav me-auto">
 											<li className="nav-item">
 												<NavLink
 													className={({ isActive }) =>
-														isActive ? 'nav-link active' : 'nav-link root'
+														isActive ? 'nav-link active  mt-3 pt-0' : 'nav-link root mt-3 pt-0'
 													}
 													to={'/portfolio'}
 													onClick={onUpdate}
@@ -86,7 +86,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 											<li className="nav-item">
 												<NavLink
 													className={({ isActive }) =>
-														isActive ? 'nav-link active' : 'nav-link root'
+														isActive ? 'nav-link active  mt-3 pt-0' : 'nav-link root mt-3 pt-0'
 													}
 													to={'/about'}
 													onClick={onUpdate}
@@ -97,7 +97,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 											<li className="nav-item">
 												<NavLink
 													className={({ isActive }) =>
-														isActive ? 'nav-link active' : 'nav-link root'
+														isActive ? 'nav-link active  mt-3 pt-0' : 'nav-link root mt-3 pt-0'
 													}
 													to={'/contact'}
 													onClick={onUpdate}
@@ -108,7 +108,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 											{/*<li className="nav-item">
 												<NavLink
 													className={({ isActive }) =>
-														isActive ? 'nav-link active' : 'nav-link root'
+														isActive ? 'nav-link active  mt-3 pt-0' : 'nav-link root mt-3 pt-0'
 													}
 													to={'/about'}
 													onClick={onUpdate}
@@ -119,10 +119,11 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 											<MemberNavMenu {...sessionActions} {...this.props} />*/}
 										</ul>
 										<div className="d-none d-md-block d-lg-block d-xl-block">
+											<nav aria-label="Social media links">
 											<ul className="navbar-nav">
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0 mt-3 pt-0"
 														href="https://www.facebook.com/brian.harney.12"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -133,7 +134,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://twitter.com/bharney0"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -144,7 +145,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://www.instagram.com/porkchop.12/"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -155,7 +156,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://www.linkedin.com/in/bharney0/"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -166,7 +167,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://github.com/bharney"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -177,7 +178,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://hub.docker.com/u/bharney0"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -188,7 +189,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://stackoverflow.com/users/4740497/bharney"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -202,7 +203,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://paypal.me/BrianHarney?locale.x=en_US"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -218,10 +219,12 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 													{...this.props}
 												/> */}
 											</ul>
+											</nav>
 										</div>
 									</div>
 									<div className="d-inline-flex">
 										<div className="d-md-none d-lg-none d-xl-none">
+											<nav aria-label="Social media links">
 											<ul className="navbar-nav mobile-nav">
 												{/* <UserMenu
 													{...accountActions}
@@ -231,7 +234,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												/> */}
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://www.facebook.com/brian.harney.12"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -242,7 +245,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://twitter.com/bharney0"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -253,7 +256,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://www.instagram.com/porkchop.12/"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -264,7 +267,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://www.linkedin.com/in/bharney0/"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -275,7 +278,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 												</li>
 												<li className="nav-item">
 													<a
-														className="nav-link root"
+														className="nav-link root mt-3 pt-0"
 														href="https://github.com/bharney"
 														target="_blank"
 														rel="noopener noreferrer"
@@ -285,6 +288,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 													</a>
 												</li>
 											</ul>
+											</nav>
 										</div>
 										<button
 											className="navbar-toggler navbar-toggler-right"

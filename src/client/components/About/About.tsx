@@ -4,7 +4,7 @@ export default class About extends React.Component<{}, {}> {
 	public render() {
 		return (
 			<React.Fragment>
-				<div className="mt-4 container">
+				<div className="mt-5 container">
 					<h1 className="display-4 mb-4 fw-bold">About me.</h1>
 					<p className="col fs-4">
 						Hello! I'm Brian Harney, a passionate Software Engineer at Microsoft, based in the

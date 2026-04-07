@@ -27,7 +27,7 @@ const ShowInfo = () => {
 			{showInfo ? (
 				<ul className="list-unstyled fs-4">
 					<li>
-						<a className="text-white" href="mailto:bharney0@gmail.com">
+						<a className="text-decoration-none" href="mailto:bharney0@gmail.com">
 							bharney0@gmail.com
 						</a>
 					</li>

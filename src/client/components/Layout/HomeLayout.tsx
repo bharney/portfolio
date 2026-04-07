@@ -33,12 +33,15 @@ export class HomeLayout extends React.Component<LayoutProps, {}> {
 								id="slider"
 								className={`row row-offcanvas row-offcanvas-right ${on ? 'active' : ''}`}
 							>
-								<div className="col-12 col-md-12 col-lg-12">{this.props.children}</div>
-								<div id="sidebar" className="col-8 d-md-none d-lg-none d-xl-none sidebar-offcanvas">
+								<div className="col-12">{this.props.children}</div>
+								<div id="sidebar" className="col-4 col-sm-3 d-none d-lg-block sidebar-home">
 									<div className="list-group">
 										<SliderMenu />
-										{/* <MemberSliderMenu {...this.props} />
-										<AdminSliderMenu {...this.props} /> */}
+									</div>
+								</div>
+								<div id="sidebar" className="col-8 d-lg-none sidebar-offcanvas">
+									<div className="list-group">
+										<SliderMenu />
 									</div>
 								</div>
 							</div>

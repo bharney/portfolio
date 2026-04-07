@@ -258,8 +258,23 @@ function createClientConfig(env: Env): Configuration {
 										href: `/${name}`
 									}
 								}));
-								// Insert font preloads at the beginning of head tags
-								data.headTags.unshift(...fontPreloads);
+
+								// 3. Inject <link rel="preload"> for hero background image (LCP element)
+								const heroImage = Object.keys(compilation.assets).find((name: string) => /images\/home\.[^.]+\.webp$/.test(name));
+								const heroPreloads = heroImage ? [{
+									tagName: 'link',
+									voidTag: true,
+									attributes: {
+										rel: 'preload',
+										as: 'image',
+										type: 'image/webp',
+										fetchpriority: 'high',
+										href: `/${heroImage}`
+									}
+								}] : [];
+
+								// Insert preloads at the beginning of head tags
+								data.headTags.unshift(...fontPreloads, ...heroPreloads);
 
 								cb(null, data);
 							}

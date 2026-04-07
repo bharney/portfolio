@@ -27,7 +27,7 @@ export class Layout extends React.Component<LayoutProps, {}> {
 					<React.Fragment>
 						<main
 							onClick={e => handleOverlayToggle(e as any)}
-							className={`container ${on ? ' overlay' : ''}`}
+							className={`container-fluid ${on ? ' overlay' : ''}`}
 						>
 							<Alert {...this.props} />
 							<div
