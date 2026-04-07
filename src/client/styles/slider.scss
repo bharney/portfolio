@@ -23,18 +23,19 @@
 
 	.list-group {
 		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', Arial, sans-serif;
-		background: linear-gradient(to bottom, $green-dark, $green-light);
+		background: $light;
 		border-radius: 0.375rem;
 		overflow: hidden;
+		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .08), 0 1px 10px 0 rgba(0, 0, 0, .06), 0 2px 4px -1px rgba(0, 0, 0, .1);
 		.list-group-item.active {
-			background-color: rgba($light, 0.15);
-			border-color: rgba($light, 0.2);
-			color: $light;
+			background-color: rgba($green, 0.15);
+			border-color: rgba($green, 0.2);
+			color: $green;
 		}
 		.list-group-item {
 			background-color: transparent !important;
-			border-color: rgba($light, 0.2);
-			color: $light;
+			border-color: rgba($green, 0.2);
+			color: $green;
 			padding-top: 0.75em;
 			padding-bottom: 0.75em;
 			font-size: 1.35rem;
@@ -46,7 +47,7 @@
 		}
 		/* open state */
 		.list-group-item[aria-expanded='true'] {
-			background-color: rgba($light, 0.15);
+			background-color: rgba($green, 0.15);
 		}
 
 		.list-group-item[aria-expanded='true']::after {
