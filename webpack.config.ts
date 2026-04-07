@@ -245,19 +245,33 @@ function createClientConfig(env: Env): Configuration {
 									}
 								});
 
-								// 2. Inject <link rel="preload"> for self-hosted woff2 fonts
-								const fontAssets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff2'));
-								const fontPreloads = fontAssets.map((name: string) => ({
-									tagName: 'link',
-									voidTag: true,
-									attributes: {
-										rel: 'preload',
-										as: 'font',
-										type: 'font/woff2',
-										crossorigin: 'anonymous',
-										href: `/${name}`
-									}
-								}));
+								// 2. Inject <link rel="preload"> for self-hosted fonts
+								const woff2Assets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff2'));
+								const woffAssets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff') && !name.endsWith('.woff2'));
+								const fontPreloads = [
+									...woff2Assets.map((name: string) => ({
+										tagName: 'link',
+										voidTag: true,
+										attributes: {
+											rel: 'preload',
+											as: 'font',
+											type: 'font/woff2',
+											crossorigin: 'anonymous',
+											href: `/${name}`
+										}
+									})),
+									...woffAssets.map((name: string) => ({
+										tagName: 'link',
+										voidTag: true,
+										attributes: {
+											rel: 'preload',
+											as: 'font',
+											type: 'font/woff',
+											crossorigin: 'anonymous',
+											href: `/${name}`
+										}
+									}))
+								];
 
 								// 3. Inject <link rel="preload"> for hero background image (LCP element)
 								const heroImage = Object.keys(compilation.assets).find((name: string) => /images\/home\.[^.]+\.webp$/.test(name));
@@ -275,6 +289,31 @@ function createClientConfig(env: Env): Configuration {
 
 								// Insert preloads at the beginning of head tags
 								data.headTags.unshift(...fontPreloads, ...heroPreloads);
+
+								// 4. Inject inline @font-face for woff-only fonts into critical CSS
+								//    so the browser can match font-family references immediately
+								const fontFaceMap: Record<string, { family: string; weight: string }> = {
+									'SlimJoe': { family: 'Slim Joe', weight: '400' },
+									'BigJohn': { family: 'Big John', weight: '400' }
+								};
+								const fontFaceRules = woffAssets
+									.map((name: string) => {
+										const baseName = name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '');
+										const meta = fontFaceMap[baseName];
+										if (!meta) return '';
+										return `@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:url('/${name}') format('woff')}`;
+									})
+									.filter(Boolean)
+									.join('');
+
+								if (fontFaceRules) {
+									data.headTags.unshift({
+										tagName: 'style',
+										voidTag: false,
+										innerHTML: fontFaceRules,
+										attributes: {}
+									});
+								}
 
 								cb(null, data);
 							}
