@@ -60,6 +60,17 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_alt }}
           package: .
 
+      - name: Wait for Warmup
+        run: |
+          echo "Pinging alt slot to ensure it is awake..."
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://bharney-alt.azurewebsites.net/)
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "Warmup failed after 5 attempts"
+          exit 1
   swap-to-production:
     runs-on: ubuntu-latest
     needs: deploy-to-alt
