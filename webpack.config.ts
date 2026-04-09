@@ -351,18 +351,40 @@ function createClientConfig(env: Env): Configuration {
 								// 5. Inject inline layer background-image rules into critical CSS
 								//    so the browser discovers all parallax layer images immediately
 								//    instead of waiting for the async external stylesheet to load.
-								//    Layers 0, 7, 10 are <8KB and inlined as data-URLs by webpack's
-								//    asset module — they're handled via the external CSS and don't
-								//    need critical-path injection.
 								const layerZIndexBase = 3; // layer-0 starts at z-index:3
-								const layerRules = Array.from({ length: 20 }, (_, i) => {
+								const layerRulesList: string[] = [];
+
+								for (let i = 0; i < 20; i++) {
 									const re = new RegExp(`images/Layer ${i}\\.[^.]+\\.webp$`);
 									const asset = Object.keys(compilation.assets).find((n: string) => re.test(n));
-									// Skip data-URL-inlined layers (no separate asset file emitted above 8KB)
-									if (!asset) return '';
-									return `.layer-${i}{z-index:${layerZIndexBase + i};background-image:url('/${asset}')}`;
-								}).filter(Boolean).join('');
+									if (asset) {
+										// Layer has a separate file — reference it by URL
+										layerRulesList.push(`.layer-${i}{z-index:${layerZIndexBase + i};background-image:url('/${asset}')}`);
+									} else {
+										// Layer was inlined as a data URL by webpack's asset module (<8KB).
+										// Extract the full rule from the compiled CSS so it appears in critical CSS.
+										// Layer 0 is the LCP element — its data URL MUST be discoverable immediately.
+										const cssAssets = Object.keys(compilation.assets).filter((n: string) => n.endsWith('.css'));
+										let found = false;
+										for (const cssName of cssAssets) {
+											const source = compilation.assets[cssName].source();
+											const cssText = typeof source === 'string' ? source : source.toString();
+											const ruleRe = new RegExp(`\\.layer-${i}\\{[^}]+\\}`);
+											const match = cssText.match(ruleRe);
+											if (match) {
+												layerRulesList.push(match[0]);
+												found = true;
+												break;
+											}
+										}
+										if (!found) {
+											// Fallback: just emit z-index so stacking order is correct
+											layerRulesList.push(`.layer-${i}{z-index:${layerZIndexBase + i}}`);
+										}
+									}
+								}
 
+								const layerRules = layerRulesList.join('');
 								if (layerRules) {
 									data.headTags.unshift({
 										tagName: 'style',
