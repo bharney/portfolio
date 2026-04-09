@@ -294,27 +294,56 @@ function createClientConfig(env: Env): Configuration {
 								// Insert preloads at the beginning of head tags
 								data.headTags.unshift(...fontPreloads, ...layerPreloads);
 
-								// 4. Inject inline @font-face for woff-only fonts into critical CSS
-								//    so the browser can match font-family references immediately
-								const fontFaceMap: Record<string, { family: string; weight: string }> = {
+								// 4. Inject inline @font-face for ALL self-hosted fonts into critical CSS
+								//    so the browser can match font-family references immediately.
+								//    Without this, fonts defined only in the async external stylesheet
+								//    cause a layout shift when that stylesheet loads and the browser
+								//    discovers + swaps them in.
+								const woffFontFaceMap: Record<string, { family: string; weight: string }> = {
 									'SlimJoe': { family: 'Slim Joe', weight: '400' },
-									'BigJohn': { family: 'Big John', weight: '400' }
+									'BigJohn': { family: 'Big John', weight: '400' },
+									'PlayfairDisplay-latin': { family: 'Playfair Display', weight: '400' }
 								};
-								const fontFaceRules = woffAssets
-									.map((name: string) => {
-										const baseName = name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '');
-										const meta = fontFaceMap[baseName];
-										if (!meta) return '';
-										return `@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:url('/${name}') format('woff')}`;
-									})
-									.filter(Boolean)
-									.join('');
+								const woff2FontFaceMap: Record<string, { family: string; weight: string; woffPair?: boolean }> = {
+									'PlayfairDisplay-latin': { family: 'Playfair Display', weight: '400', woffPair: true },
+									'FiraSansCondensed-200-latin': { family: 'Fira Sans Condensed', weight: '200' }
+								};
 
-								if (fontFaceRules) {
+								// Build woff2+woff combo rules for fonts that have both formats,
+								// and woff-only / woff2-only rules for the rest
+								const pairedFamilies = new Set<string>();
+								const fontFaceRules: string[] = [];
+
+								// First pass: woff2 fonts that also have a woff pair → combined src
+								woff2Assets.forEach((w2name: string) => {
+									const baseName = w2name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff2$/, '');
+									const meta = woff2FontFaceMap[baseName];
+									if (!meta) return;
+									const woffMatch = meta.woffPair
+										? woffAssets.find((wn: string) => wn.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '') === baseName)
+										: null;
+									const src = woffMatch
+										? `url('/${w2name}') format('woff2'),url('/${woffMatch}') format('woff')`
+										: `url('/${w2name}') format('woff2')`;
+									fontFaceRules.push(`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:${src}}`);
+									pairedFamilies.add(meta.family);
+								});
+
+								// Second pass: woff-only fonts (not already covered by a woff2 pair)
+								woffAssets.forEach((name: string) => {
+									const baseName = name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '');
+									const meta = woffFontFaceMap[baseName];
+									if (!meta || pairedFamilies.has(meta.family)) return;
+									fontFaceRules.push(`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:url('/${name}') format('woff')}`);
+								});
+
+								const fontFaceCSS = fontFaceRules.join('');
+
+								if (fontFaceCSS) {
 									data.headTags.unshift({
 										tagName: 'style',
 										voidTag: false,
-										innerHTML: fontFaceRules,
+										innerHTML: fontFaceCSS,
 										attributes: {}
 									});
 								}
@@ -329,7 +358,18 @@ function createClientConfig(env: Env): Configuration {
 		devServer: {
 			hot: env.hot,
 			port: 9000,
-			historyApiFallback: true
+			// Only rewrite HTML page requests (not JS/CSS/font/image assets) to index.html.
+			// Without this, historyApiFallback intercepts lazy-chunk requests (e.g. /js/NotFound.js)
+			// and returns index.html, causing "Unexpected token '<'" errors.
+			historyApiFallback: {
+				rewrites: [
+					{ from: /^\/js\//, to: (context: any) => context.parsedUrl.pathname },
+					{ from: /^\/css\//, to: (context: any) => context.parsedUrl.pathname },
+					{ from: /^\/fonts\//, to: (context: any) => context.parsedUrl.pathname },
+					{ from: /^\/images\//, to: (context: any) => context.parsedUrl.pathname },
+					{ from: /.*/, to: '/index.html' }
+				]
+			}
 		}
 	};
 }
