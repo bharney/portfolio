@@ -61,7 +61,7 @@ const portfolioItems: PortfolioItem[] = [
 		alt: 'Harney Hall Wedding',
 		title: 'Harney Hall Wedding',
 		link: 'https://harneyhall.azurewebsites.net/',
-		description: 'I got married! And we needed an online presence, so I built a Wedding Website for RSVP, Wall Posts, Information and Directions.'
+		description: 'I got married and then divorced! But we needed an online presence, so I built a Wedding Website for RSVP, Wall Posts, Information and Directions.'
 	},
 	{
 		src: jMS,
@@ -102,7 +102,7 @@ export default class Portfolio extends React.Component<{}, {}> {
 		return (
 			<div className="album">
 				<div className="mt-5 container">
-					<h2 className="display-4 mb-4 fw-bold">Portfolio.</h2>
+					<h1 className="display-4 mb-4 fw-bold">Portfolio.</h1>
 					<p className="lead">A showcase of my work, featuring a variety of projects that I have built over the years. This portfolio reflects my skills and expertise.</p>
 					<div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
 						{portfolioItems.map((item, index) => (
@@ -119,7 +119,7 @@ export default class Portfolio extends React.Component<{}, {}> {
 									/>
 									<div className="card-body">
 										<Link
-											className="icon-link icon-link-hover"
+											className="icon-link icon-link-hover d-inline-flex"
 											target="_blank"
 											rel="noopener noreferrer"
 											to={item.link}
