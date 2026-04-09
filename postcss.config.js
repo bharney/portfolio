@@ -15,22 +15,27 @@ module.exports = {
 						// Safelist dynamic classes that PurgeCSS can't detect statically
 						safelist: {
 							standard: [
-								// Navbar toggler states (toggled via Bootstrap JS or React)
-								/^navbar/,
-								/^nav-/,
-								/^collapse/,
-								/^collapsing/,
-								/^show/,
-								/^fade/,
+								// Navbar toggler states (toggled via JS)
+								'navbar-collapse',
+								'collapse',
+								'collapsing',
+								'show',
+								'fade',
 								// Dynamic state classes added via JS
 								'active',
 								'overlay',
 								// Offcanvas sidebar (dynamic template literals)
-								/^row-offcanvas/,
-								/^sidebar-offcanvas/,
+								'row-offcanvas',
+								'row-offcanvas-right',
+								'row-offcanvas-left',
+								'sidebar-offcanvas',
 								// Fixed navbar
 								'fixed-top',
-								'top-nav-collapse'
+								'top-nav-collapse',
+								// Alert dynamic classes (fade-in, fade-out via JS)
+								/^fade-/,
+								/^toast-/,
+								/^alert-/
 							],
 							deep: [],
 							greedy: []

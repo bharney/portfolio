@@ -236,12 +236,159 @@ main {
 		}
 	}
 
+	/* ---------------------- PARALLAX -------------------- */
+	.parallax-container {
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		/* clip creates a new stacking context that clips fixed-position children */
+		clip: rect(auto, auto, auto, auto);
+		clip-path: inset(0);
+		background-color: #0a2a3a;
+		z-index: 1;
+	}
+
+	.parallax-layer {
+		margin: 0;
+		padding: 0;
+		left: 0;
+		top: 0;
+		position: fixed;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		height: 100vh;
+		width: 100%;
+		will-change: transform;
+	}
+
+	.layer-0 {
+		z-index: 3;
+		background-image: url('../images/Layer 0.webp');
+	}
+
+	.layer-1 {
+		z-index: 4;
+		background-image: url('../images/Layer 1.webp');
+	}
+
+	.layer-2 {
+		z-index: 5;
+		background-image: url('../images/Layer 2.webp');
+	}
+
+	.layer-3 {
+		z-index: 6;
+		background-image: url('../images/Layer 3.webp');
+	}
+
+	.layer-4 {
+		z-index: 7;
+		background-image: url('../images/Layer 4.webp');
+	}
+
+	.layer-5 {
+		z-index: 8;
+		background-image: url('../images/Layer 5.webp');
+	}
+
+	.layer-6 {
+		z-index: 9;
+		background-image: url('../images/Layer 6.webp');
+	}
+
+	.layer-7 {
+		z-index: 10;
+		background-image: url('../images/Layer 7.webp');
+	}
+
+	.layer-8 {
+		z-index: 11;
+		background-image: url('../images/Layer 8.webp');
+	}
+
+	.layer-9 {
+		z-index: 12;
+		background-image: url('../images/Layer 9.webp');
+	}
+
+	.layer-10 {
+		z-index: 13;
+		background-image: url('../images/Layer 10.webp');
+	}
+
+	.layer-11 {
+		z-index: 14;
+		background-image: url('../images/Layer 11.webp');
+	}
+
+	.layer-12 {
+		z-index: 15;
+		background-image: url('../images/Layer 12.webp');
+	}
+
+	.layer-13 {
+		z-index: 16;
+		background-image: url('../images/Layer 13.webp');
+	}
+
+	.layer-14 {
+		z-index: 17;
+		background-image: url('../images/Layer 14.webp');
+	}
+
+	.layer-15 {
+		z-index: 18;
+		background-image: url('../images/Layer 15.webp');
+	}
+
+	.layer-16 {
+		z-index: 19;
+		background-image: url('../images/Layer 16.webp');
+	}
+
+	.layer-17 {
+		z-index: 20;
+		background-image: url('../images/Layer 17.webp');
+	}
+
+	.layer-18 {
+		z-index: 21;
+		background-image: url('../images/Layer 18.webp');
+	}
+
+	.layer-19 {
+		z-index: 22;
+		background-image: url('../images/Layer 19.webp');
+	}
+
+	.cover {
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		background-color: #0a2a3a;
+	}
+
+	.parallax-hero-content {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100vh;
+		z-index: 25;
+		pointer-events: none;
+		display: flex;
+		align-items: flex-end;
+		padding-bottom: 3rem;
+	}
+
 	.hero-content {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		padding: 2rem 0 3rem;
 		width: 100%;
+		pointer-events: auto;
 
 		@media (max-width: 767px) {
 			padding: 1.5rem 0 2rem;
@@ -250,9 +397,11 @@ main {
 
 	.landing-wrapper {
 		width: 100vw;
+		position: relative;
+		z-index: 30;
+		background-color: $light;
 
 		@media (min-width: 1200px) and (min-height: 1200px) {
-			position: relative;
 			top: -190px;
 		}
 	}
@@ -304,7 +453,7 @@ main {
 	.hero-light {
 		font-family: 'Slim Joe', 'Slim Joe Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
-		color: $green;
+		color: $light;
 		text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
 	}
 
@@ -312,20 +461,20 @@ main {
 	.hero-apostrophe {
 		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 200;
-		color: $green;
+		color: $light;
 	}
 
 	// Bold green — Big John with shadow
 	.hero-bold {
 		font-family: 'Big John', 'Big John Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
-		color: $green;
+		color: $light;
 		text-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35);
 	}
 
 	.hero-border {
 		border-width: 2px !important;
-		border-color: $green !important;
+		border-color: $light !important;
 		box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 	}
 

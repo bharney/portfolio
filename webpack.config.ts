@@ -273,22 +273,26 @@ function createClientConfig(env: Env): Configuration {
 									}))
 								];
 
-								// 3. Inject <link rel="preload"> for hero background image (LCP element)
-								const heroImage = Object.keys(compilation.assets).find((name: string) => /images\/home\.[^.]+\.webp$/.test(name));
-								const heroPreloads = heroImage ? [{
+								// 3. Inject <link rel="preload"> for key parallax layers (LCP candidates)
+								//    Layer 0, 7, 10 are <8KB and inlined as data URLs — skip those
+								//    Preload the visually largest layers that the browser needs for first paint
+								const layerPreloads = [1, 15, 16].map(n => {
+									const re = new RegExp(`images/Layer ${n}\\.[^.]+\\.webp$`);
+									return Object.keys(compilation.assets).find((name: string) => re.test(name));
+								}).filter(Boolean).map(name => ({
 									tagName: 'link',
 									voidTag: true,
 									attributes: {
 										rel: 'preload',
 										as: 'image',
 										type: 'image/webp',
-										fetchpriority: 'high',
-										href: `/${heroImage}`
+										...(name === Object.keys(compilation.assets).find((n: string) => /images\/Layer 1\./.test(n)) ? { fetchpriority: 'high' } : {}),
+										href: `/${name}`
 									}
-								}] : [];
+								}));
 
 								// Insert preloads at the beginning of head tags
-								data.headTags.unshift(...fontPreloads, ...heroPreloads);
+								data.headTags.unshift(...fontPreloads, ...layerPreloads);
 
 								// 4. Inject inline @font-face for woff-only fonts into critical CSS
 								//    so the browser can match font-family references immediately
