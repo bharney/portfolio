@@ -52,7 +52,7 @@ const portfolioItems: PortfolioItem[] = [
 		webpSrc: goSurferWebp,
 		alt: 'Go Surfer',
 		title: 'Go Surfer',
-		link: '#',
+		link: '/404',
 		description: "When the roosters crowin' I start scratchin' my head, Gotta flop over get myself outta bed. Grab a cup o joe and in the car I roll, Y'know I want to get movin', I'm on dawn patrol."
 	},
 	{
