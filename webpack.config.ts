@@ -348,6 +348,30 @@ function createClientConfig(env: Env): Configuration {
 									});
 								}
 
+								// 5. Inject inline layer background-image rules into critical CSS
+								//    so the browser discovers all parallax layer images immediately
+								//    instead of waiting for the async external stylesheet to load.
+								//    Layers 0, 7, 10 are <8KB and inlined as data-URLs by webpack's
+								//    asset module — they're handled via the external CSS and don't
+								//    need critical-path injection.
+								const layerZIndexBase = 3; // layer-0 starts at z-index:3
+								const layerRules = Array.from({ length: 20 }, (_, i) => {
+									const re = new RegExp(`images/Layer ${i}\\.[^.]+\\.webp$`);
+									const asset = Object.keys(compilation.assets).find((n: string) => re.test(n));
+									// Skip data-URL-inlined layers (no separate asset file emitted above 8KB)
+									if (!asset) return '';
+									return `.layer-${i}{z-index:${layerZIndexBase + i};background-image:url('/${asset}')}`;
+								}).filter(Boolean).join('');
+
+								if (layerRules) {
+									data.headTags.unshift({
+										tagName: 'style',
+										voidTag: false,
+										innerHTML: layerRules,
+										attributes: {}
+									});
+								}
+
 								cb(null, data);
 							}
 						);
