@@ -22,7 +22,7 @@
 @import "bootstrap/scss/navbar";
 @import "bootstrap/scss/card";
 @import "bootstrap/scss/list-group";
-@import "bootstrap/scss/alert";
+// alert module removed — only base .alert class needed, defined in toastr.scss
 @import "bootstrap/scss/buttons";      // Contact page btn
 @import "bootstrap/scss/transitions";  // fade, collapse animations
 

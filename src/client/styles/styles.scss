@@ -397,13 +397,8 @@ main {
 
 	.landing-wrapper {
 		width: 100vw;
-		position: relative;
 		z-index: 30;
 		background-color: $light;
-
-		@media (min-width: 1200px) and (min-height: 1200px) {
-			top: -190px;
-		}
 	}
 
 	.landing {
@@ -411,7 +406,6 @@ main {
 		z-index: 2;
 		background-color: $light;
 		margin-top: -3rem;
-		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .08), 0 1px 10px 0 rgba(0, 0, 0, .06), 0 2px 4px -1px rgba(0, 0, 0, .1);
 
 		.card-body {
 			padding: 2.5rem 2rem 1rem;
