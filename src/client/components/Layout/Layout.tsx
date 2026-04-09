@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavContext } from '../../App';
+import { NavContext } from '../../contexts';
 import { ApplicationState } from '../../store/index';
 import * as AccountState from '../../store/Account';
 import * as AlertState from '../../store/Alert';

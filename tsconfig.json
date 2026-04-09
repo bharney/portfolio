@@ -1,7 +1,7 @@
 {
 	"exclude": ["node_modules"],
 	"compilerOptions": {
-		"target": "es6",
+		"target": "esnext",
 		"module": "commonjs",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
@@ -11,5 +11,5 @@
 		"skipLibCheck": true,
 		"baseUrl": "src"
 	},
-	"include:": ["src/**/*"]
+	"include": ["src/**/*"]
 }

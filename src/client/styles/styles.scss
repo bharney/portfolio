@@ -21,7 +21,8 @@
 	font-display: optional;
 	src: url('../fonts/PlayfairDisplay-latin.woff2') format('woff2'),
 		url('../fonts/PlayfairDisplay-latin.woff') format('woff');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+		U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
@@ -30,7 +31,8 @@
 	font-weight: 200;
 	font-display: optional;
 	src: url('../fonts/FiraSansCondensed-200-latin.woff2') format('woff2');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+		U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
@@ -58,6 +60,7 @@
 	descent-override: 25%;
 	line-height-override: normal;
 }
+
 @font-face {
 	font-family: 'Slim Joe Fallback';
 	src: local('Arial Narrow'), local('Arial');
@@ -66,6 +69,7 @@
 	descent-override: 25%;
 	line-height-override: normal;
 }
+
 @font-face {
 	font-family: 'Fira Sans Condensed Fallback';
 	src: local('Arial Narrow'), local('Arial');
@@ -112,6 +116,7 @@ nav {
 		font-size: 1.5rem;
 		font-weight: 500;
 		text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+
 		&:hover {
 			color: $green;
 		}
@@ -126,17 +131,17 @@ nav {
 	padding-top: 1em;
 	padding-bottom: 1em;
 	min-height: 70px;
-	contain: layout style;
+	contain: style;
 	opacity: 1;
 	z-index: 999;
-	border-bottom: 1px solid rgba($green-dark, .15);
+	border-bottom: 1px solid rgba($green-dark, 0.15);
 	box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08), 0 1px 10px 0 rgba(0, 0, 0, 0.06),
 		0 2px 4px -1px rgba(0, 0, 0, 0.1);
 	-webkit-font-smoothing: antialiased;
 	transition: background-color 0.5s ease-in-out, opacity 0.5s ease;
 
 	.navbar-toggler {
-		border-color: rgba($green-dark, .3);
+		border-color: rgba($green-dark, 0.3);
 	}
 
 	.navbar-toggler-icon {
@@ -175,10 +180,11 @@ nav {
 		padding-bottom: 0.5em;
 		min-height: 50px;
 		opacity: 0.9;
-		transition: background-color 0.5s ease-in-out, opacity 0.5s ease, padding-top 0.5s ease, padding-bottom 0.5s ease;
+		transition: background-color 0.5s ease-in-out, opacity 0.5s ease, padding-top 0.5s ease,
+			padding-bottom 0.5s ease;
 	}
 
-	&>div.container {
+	& > div.container {
 		@media (max-width: 1199px) {
 			width: 100%;
 			max-width: none;
@@ -193,6 +199,33 @@ main {
 	color: $dark;
 	background-color: $light;
 	overflow-x: hidden;
+	/* Offset for the fixed-top navbar so page content isn't hidden behind it */
+	padding-top: 70px;
+
+	/* Landing section: break out of col-lg-9 to center content on the full viewport */
+	.landing-section {
+		width: 100vw;
+		margin-left: calc(-50vw + 50%);
+		position: relative;
+		left: 12vw;
+	}
+
+	@media (max-width: 1199px) {
+		.landing-section {
+			position: initial;
+			left: unset;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	.landing-content {
+		padding: 1rem 0;
+
+		@media (max-width: 767px) {
+			padding: 1rem 1rem;
+		}
+	}
 
 	&.container {
 		@media (max-width: 1199px) {
@@ -206,11 +239,11 @@ main {
 		padding-right: 0;
 		padding-top: 0;
 
-		>.row {
+		> .row {
 			margin-left: 0;
 			margin-right: 0;
 
-			>.col-12 {
+			> .col-12 {
 				padding-left: 0;
 				padding-right: 0;
 			}
@@ -239,7 +272,11 @@ main {
 	/* ---------------------- PARALLAX -------------------- */
 	.parallax-container {
 		position: relative;
-		width: 100%;
+		/* Break out of the parent grid column to fill the full viewport width */
+		width: 100vw;
+		margin-left: calc(-50vw + 50%);
+		/* Pull up behind the fixed navbar so the hero fills the full viewport */
+		margin-top: -70px;
 		height: 100vh;
 		/* clip creates a new stacking context that clips fixed-position children */
 		clip: rect(auto, auto, auto, auto);
@@ -395,43 +432,25 @@ main {
 		}
 	}
 
-	.landing-wrapper {
-		width: 100vw;
-		z-index: 30;
-		background-color: $light;
+	.card-body {
+		padding: 2.5rem 2rem 1rem;
 	}
 
-	.landing {
-		position: relative;
-		z-index: 2;
-		background-color: $light;
-		margin-top: -3rem;
+	.hero-text {
+		color: $darker;
+		font-size: 3rem;
+	}
 
-		.card-body {
-			padding: 2.5rem 2rem 1rem;
-		}
-
+	@media (max-width: 767px) {
 		.hero-text {
 			color: $darker;
-			font-size: 3rem;
-		}
-
-		@media (max-width: 767px) {
-			margin-top: -2rem;
-
-			.card-body {
-				padding: 1.5rem 1.25rem 1rem;
-			}
-
-			.hero-text {
-				color: $darker;
-				font-size: 2rem;
-			}
+			font-size: 2rem;
 		}
 	}
 
 	.hero {
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+			sans-serif;
 		font-size: 7rem;
 		color: $dark;
 		line-height: 1.05;
@@ -445,7 +464,8 @@ main {
 
 	// Thin green leading words — Slim Joe with subtle shadow
 	.hero-light {
-		font-family: 'Slim Joe', 'Slim Joe Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Slim Joe', 'Slim Joe Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
 		color: $light;
 		text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
@@ -453,14 +473,16 @@ main {
 
 	// Apostrophe styled to match the thin Slim Joe aesthetic
 	.hero-apostrophe {
-		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Fira Sans Condensed', 'Fira Sans Condensed Fallback', -apple-system,
+			BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 200;
 		color: $light;
 	}
 
 	// Bold green — Big John with shadow
 	.hero-bold {
-		font-family: 'Big John', 'Big John Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-family: 'Big John', 'Big John Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			Roboto, 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 500;
 		color: $light;
 		text-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35);
@@ -485,7 +507,7 @@ main {
 
 .dropdown-menu {
 	background-color: $light;
-	border-color: rgba($green-dark, .15);
+	border-color: rgba($green-dark, 0.15);
 	color: $green-dark;
 
 	@media (max-width: 415px) {

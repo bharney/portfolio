@@ -11,8 +11,13 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Loading from './components/Common/Loading';
 import Home from './components/Home/Home';
 import { Layout } from './components/Layout/Layout';
-const AsyncFooter = React.lazy(() => import(/* webpackChunkName: "Footer" */ './components/Footer/Footer'));
-const AsyncAbout = React.lazy(() => import(/* webpackChunkName: "About" */ './components/About/About'));
+import { NavContext, AuthContext } from './contexts';
+const AsyncFooter = React.lazy(
+	() => import(/* webpackChunkName: "Footer" */ './components/Footer/Footer')
+);
+const AsyncAbout = React.lazy(
+	() => import(/* webpackChunkName: "About" */ './components/About/About')
+);
 const AsyncContact = React.lazy(
 	() => import(/* webpackChunkName: "Contact" */ './components/Contact/Contact')
 );
@@ -28,21 +33,32 @@ interface Props {
 	serverData?: unknown;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 type AppProps = Props & any;
 
 interface On {
 	on: boolean;
 }
-export const NavContext = React.createContext({
-	on: false,
-	toggle: () => {},
-	onUpdate: () => {},
-	handleOverlayToggle: (e: Event) => {}
-});
-
-export const AuthContext = React.createContext(null);
 export const App = (props: AppProps) => {
 	const [state, setState] = useState({ on: false });
+
+	const handleSidebarPosition = () => {
+		const sidebar = document.getElementById('sidebar');
+		if (!sidebar) return;
+		const bounding = sidebar.getBoundingClientRect();
+		const offset = bounding.top + document.body.scrollTop;
+		let totalOffset = (offset - 100) * -1;
+		totalOffset = totalOffset < 0 ? 0 : totalOffset;
+		sidebar.style.top = totalOffset + 'px';
+		document.documentElement.style.overflowY = 'hidden';
+	};
+	const handleSidebarToggle = () => {
+		const sidebar = document.getElementById('sidebar');
+		if (sidebar) {
+			sidebar.removeAttribute('style');
+		}
+		document.documentElement.style.overflowY = 'auto';
+	};
 
 	useEffect(() => {
 		let resizeTicking = false;
@@ -75,23 +91,6 @@ export const App = (props: AppProps) => {
 		handleSidebarToggle();
 		window.scrollTo(0, 0);
 	};
-	const handleSidebarPosition = () => {
-		const sidebar = document.getElementById('sidebar');
-		if (!sidebar) return;
-		const bounding = sidebar.getBoundingClientRect();
-		const offset = bounding.top + document.body.scrollTop;
-		let totalOffset = (offset - 100) * -1;
-		totalOffset = totalOffset < 0 ? 0 : totalOffset;
-		sidebar.style.top = totalOffset + 'px';
-		document.documentElement.style.overflowY = 'hidden';
-	};
-	const handleSidebarToggle = () => {
-		const sidebar = document.getElementById('sidebar');
-		if (sidebar) {
-			sidebar.removeAttribute('style');
-		}
-		document.documentElement.style.overflowY = 'auto';
-	};
 	const handleOverlayToggle = (e: Event) => {
 		const target = e.target as HTMLElement;
 		if (target.classList.contains('overlay') || target.classList.contains('subMenu')) {
@@ -100,15 +99,17 @@ export const App = (props: AppProps) => {
 		}
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const { pca, ...rest } = props;
 
 	const navContextValue = {
 		on: state.on,
-		toggle: toggle,
-		onUpdate: onUpdate,
-		handleOverlayToggle: handleOverlayToggle
+		toggle,
+		onUpdate,
+		handleOverlayToggle
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const navProps = {
 		accountActions,
 		alertActions,

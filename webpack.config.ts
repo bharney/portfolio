@@ -12,7 +12,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { merge } from 'webpack-merge';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
@@ -80,7 +80,7 @@ function createServerConfig(_env: Env): Configuration {
 					type: 'asset/resource',
 					generator: {
 						filename: 'images/[name].[contenthash][ext]',
-						emit: false  // server doesn't need to emit image files; client already does
+						emit: false // server doesn't need to emit image files; client already does
 					}
 				},
 				{
@@ -130,11 +130,11 @@ function createClientConfig(env: Env): Configuration {
 				chunks: 'all'
 			},
 			minimizer: [
-				'...',  // keep default JS minimizer (terser)
-				new CssMinimizerPlugin()  // minify CSS in production
+				'...', // keep default JS minimizer (terser)
+				new CssMinimizerPlugin() // minify CSS in production
 			],
-			usedExports: true,  // tree-shake unused exports
-			sideEffects: true   // respect package.json sideEffects field
+			usedExports: true, // tree-shake unused exports
+			sideEffects: true // respect package.json sideEffects field
 		},
 		entry: {
 			index: './Index.tsx'
@@ -143,7 +143,7 @@ function createClientConfig(env: Env): Configuration {
 			path: resolve(__dirname, 'dist', 'public'),
 			filename: env.production ? 'js/[name].[chunkhash].js' : 'js/[name].js',
 			devtoolModuleFilenameTemplate: 'file:///[absolute-resource-path]',
-			clean: true
+			clean: env.production // only clean in production; in watch mode this wipes assets mid-rebuild
 		},
 		module: {
 			rules: [
@@ -201,33 +201,32 @@ function createClientConfig(env: Env): Configuration {
 			}),
 			new HtmlWebpackPlugin({
 				template: './index.html',
-				minify: env.production ? {
-					collapseWhitespace: true,
-					removeComments: true,
-					removeRedundantAttributes: true,
-					removeScriptTypeAttributes: true,
-					removeStyleLinkTypeAttributes: true,
-					useShortDoctype: true,
-					minifyCSS: true,
-					minifyJS: true
-				} : false
+				minify: env.production
+					? {
+							collapseWhitespace: true,
+							removeComments: true,
+							removeRedundantAttributes: true,
+							removeScriptTypeAttributes: true,
+							removeStyleLinkTypeAttributes: true,
+							useShortDoctype: true,
+							minifyCSS: true,
+							minifyJS: true
+					  }
+					: false
 			}),
 			new CopyWebpackPlugin({
-				patterns: [
-					{ from: 'favicon.ico' },
-					{ from: 'robots.txt' },
-					{ from: 'sitemap.xml' }
-				]
+				patterns: [{ from: 'favicon.ico' }, { from: 'robots.txt' }, { from: 'sitemap.xml' }]
 			}),
 			new NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
 			new DefinePlugin({
 				__SERVER__: JSON.stringify(false)
 			}),
 			// Extract CSS into separate files in production for better caching
-			env.production && new MiniCssExtractPlugin({
-				filename: 'css/[name].[contenthash].css',
-				chunkFilename: 'css/[id].[contenthash].css'
-			}),
+			env.production &&
+				new MiniCssExtractPlugin({
+					filename: 'css/[name].[contenthash].css',
+					chunkFilename: 'css/[id].[contenthash].css'
+				}),
 			(env.hot && new ReactRefreshPlugin()) as any, // casting so tsc will stop complaining
 			env.analyze && new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true }),
 			// Make extracted CSS non-render-blocking and preload self-hosted fonts
@@ -239,15 +238,23 @@ function createClientConfig(env: Env): Configuration {
 							(data: any, cb: any) => {
 								// 1. Make CSS links non-render-blocking
 								[...data.headTags, ...data.bodyTags].forEach((tag: any) => {
-									if (tag.tagName === 'link' && tag.attributes && tag.attributes.rel === 'stylesheet') {
+									if (
+										tag.tagName === 'link' &&
+										tag.attributes &&
+										tag.attributes.rel === 'stylesheet'
+									) {
 										tag.attributes.media = 'print';
 										tag.attributes.onload = "this.media='all'";
 									}
 								});
 
 								// 2. Inject <link rel="preload"> for self-hosted fonts
-								const woff2Assets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff2'));
-								const woffAssets = Object.keys(compilation.assets).filter((name: string) => name.endsWith('.woff') && !name.endsWith('.woff2'));
+								const woff2Assets = Object.keys(compilation.assets).filter((name: string) =>
+									name.endsWith('.woff2')
+								);
+								const woffAssets = Object.keys(compilation.assets).filter(
+									(name: string) => name.endsWith('.woff') && !name.endsWith('.woff2')
+								);
 								const fontPreloads = [
 									...woff2Assets.map((name: string) => ({
 										tagName: 'link',
@@ -276,20 +283,28 @@ function createClientConfig(env: Env): Configuration {
 								// 3. Inject <link rel="preload"> for key parallax layers (LCP candidates)
 								//    Layer 0, 7, 10 are <8KB and inlined as data URLs — skip those
 								//    Preload the visually largest layers that the browser needs for first paint
-								const layerPreloads = [1, 15, 16].map(n => {
-									const re = new RegExp(`images/Layer ${n}\\.[^.]+\\.webp$`);
-									return Object.keys(compilation.assets).find((name: string) => re.test(name));
-								}).filter(Boolean).map(name => ({
-									tagName: 'link',
-									voidTag: true,
-									attributes: {
-										rel: 'preload',
-										as: 'image',
-										type: 'image/webp',
-										...(name === Object.keys(compilation.assets).find((n: string) => /images\/Layer 1\./.test(n)) ? { fetchpriority: 'high' } : {}),
-										href: `/${name}`
-									}
-								}));
+								const layerPreloads = [1, 15, 16]
+									.map(n => {
+										const re = new RegExp(`images/Layer ${n}\\.[^.]+\\.webp$`);
+										return Object.keys(compilation.assets).find((name: string) => re.test(name));
+									})
+									.filter(Boolean)
+									.map(name => ({
+										tagName: 'link',
+										voidTag: true,
+										attributes: {
+											rel: 'preload',
+											as: 'image',
+											type: 'image/webp',
+											...(name ===
+											Object.keys(compilation.assets).find((n: string) =>
+												/images\/Layer 1\./.test(n)
+											)
+												? { fetchpriority: 'high' }
+												: {}),
+											href: `/${name}`
+										}
+									}));
 
 								// Insert preloads at the beginning of head tags
 								data.headTags.unshift(...fontPreloads, ...layerPreloads);
@@ -300,12 +315,19 @@ function createClientConfig(env: Env): Configuration {
 								//    cause a layout shift when that stylesheet loads and the browser
 								//    discovers + swaps them in.
 								const woffFontFaceMap: Record<string, { family: string; weight: string }> = {
-									'SlimJoe': { family: 'Slim Joe', weight: '400' },
-									'BigJohn': { family: 'Big John', weight: '400' },
+									SlimJoe: { family: 'Slim Joe', weight: '400' },
+									BigJohn: { family: 'Big John', weight: '400' },
 									'PlayfairDisplay-latin': { family: 'Playfair Display', weight: '400' }
 								};
-								const woff2FontFaceMap: Record<string, { family: string; weight: string; woffPair?: boolean }> = {
-									'PlayfairDisplay-latin': { family: 'Playfair Display', weight: '400', woffPair: true },
+								const woff2FontFaceMap: Record<
+									string,
+									{ family: string; weight: string; woffPair?: boolean }
+								> = {
+									'PlayfairDisplay-latin': {
+										family: 'Playfair Display',
+										weight: '400',
+										woffPair: true
+									},
 									'FiraSansCondensed-200-latin': { family: 'Fira Sans Condensed', weight: '200' }
 								};
 
@@ -316,16 +338,23 @@ function createClientConfig(env: Env): Configuration {
 
 								// First pass: woff2 fonts that also have a woff pair → combined src
 								woff2Assets.forEach((w2name: string) => {
-									const baseName = w2name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff2$/, '');
+									const baseName = w2name
+										.replace(/^fonts\//, '')
+										.replace(/\.[a-f0-9]+\.woff2$/, '');
 									const meta = woff2FontFaceMap[baseName];
 									if (!meta) return;
 									const woffMatch = meta.woffPair
-										? woffAssets.find((wn: string) => wn.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '') === baseName)
+										? woffAssets.find(
+												(wn: string) =>
+													wn.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '') === baseName
+										  )
 										: null;
 									const src = woffMatch
 										? `url('/${w2name}') format('woff2'),url('/${woffMatch}') format('woff')`
 										: `url('/${w2name}') format('woff2')`;
-									fontFaceRules.push(`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:${src}}`);
+									fontFaceRules.push(
+										`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:${src}}`
+									);
 									pairedFamilies.add(meta.family);
 								});
 
@@ -334,7 +363,9 @@ function createClientConfig(env: Env): Configuration {
 									const baseName = name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '');
 									const meta = woffFontFaceMap[baseName];
 									if (!meta || pairedFamilies.has(meta.family)) return;
-									fontFaceRules.push(`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:url('/${name}') format('woff')}`);
+									fontFaceRules.push(
+										`@font-face{font-family:'${meta.family}';font-style:normal;font-weight:${meta.weight};font-display:optional;src:url('/${name}') format('woff')}`
+									);
 								});
 
 								const fontFaceCSS = fontFaceRules.join('');
@@ -359,12 +390,18 @@ function createClientConfig(env: Env): Configuration {
 									const asset = Object.keys(compilation.assets).find((n: string) => re.test(n));
 									if (asset) {
 										// Layer has a separate file — reference it by URL
-										layerRulesList.push(`.layer-${i}{z-index:${layerZIndexBase + i};background-image:url('/${asset}')}`);
+										layerRulesList.push(
+											`.layer-${i}{z-index:${
+												layerZIndexBase + i
+											};background-image:url('/${asset}')}`
+										);
 									} else {
 										// Layer was inlined as a data URL by webpack's asset module (<8KB).
 										// Extract the full rule from the compiled CSS so it appears in critical CSS.
 										// Layer 0 is the LCP element — its data URL MUST be discoverable immediately.
-										const cssAssets = Object.keys(compilation.assets).filter((n: string) => n.endsWith('.css'));
+										const cssAssets = Object.keys(compilation.assets).filter((n: string) =>
+											n.endsWith('.css')
+										);
 										let found = false;
 										for (const cssName of cssAssets) {
 											const source = compilation.assets[cssName].source();
@@ -413,6 +450,11 @@ function createClientConfig(env: Env): Configuration {
 					{ from: /^\/css\//, to: (context: any) => context.parsedUrl.pathname },
 					{ from: /^\/fonts\//, to: (context: any) => context.parsedUrl.pathname },
 					{ from: /^\/images\//, to: (context: any) => context.parsedUrl.pathname },
+					// Catch any remaining asset requests (e.g. lazy chunks at the root like /vendors-xxx.js)
+					{
+						from: /\.(js|css|map|woff2?|ttf|eot|svg|png|jpe?g|webp|ico|json)(\?.*)?$/,
+						to: (context: any) => context.parsedUrl.pathname
+					},
 					{ from: /.*/, to: '/index.html' }
 				]
 			}

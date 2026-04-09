@@ -2,29 +2,32 @@
 // This reduces the pre-PurgeCSS CSS from ~200KB to ~40KB, cutting parse time significantly.
 
 // 1. Required Bootstrap infrastructure
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/variables-dark";
-@import "bootstrap/scss/maps";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/utilities";
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
 
 // 2. Reset & base
-@import "bootstrap/scss/root";
-@import "bootstrap/scss/reboot";
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
 
 // 3. Layout — grid, containers, responsive columns
-@import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
 
 // 4. Components actually used in the app
-@import "bootstrap/scss/nav";
-@import "bootstrap/scss/navbar";
-@import "bootstrap/scss/card";
-@import "bootstrap/scss/list-group";
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/card';
+@import 'bootstrap/scss/list-group';
 // alert module removed — only base .alert class needed, defined in toastr.scss
-@import "bootstrap/scss/buttons";      // Contact page btn
-@import "bootstrap/scss/transitions";  // fade, collapse animations
+@import 'bootstrap/scss/buttons'; // Contact page btn
+@import 'bootstrap/scss/transitions'; // fade, collapse animations
 
-// 5. Utilities API — generates responsive display, spacing, flex classes etc.
-@import "bootstrap/scss/utilities/api";
+// 5. Helpers — position utilities (fixed-top for sticky nav)
+@import 'bootstrap/scss/helpers/position';
+
+// 6. Utilities API — generates responsive display, spacing, flex classes etc.
+@import 'bootstrap/scss/utilities/api';
