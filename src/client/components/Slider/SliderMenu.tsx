@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { NavContext } from '../../App';
+import { NavContext } from '../../contexts';
 interface NavProps {
 	onUpdate: () => void;
 }

@@ -3,7 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { NavContext } from '../../App';
+import { NavContext } from '../../contexts';
 import * as AccountState from '../../store/Account';
 import AlertState from '../../store/Alert';
 import * as SessionState from '../../store/Session';
@@ -43,7 +43,10 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 		this.scrollTicking = true;
 		requestAnimationFrame(() => {
 			const navbar = document.getElementById('custom-nav');
-			if (!navbar) { this.scrollTicking = false; return; }
+			if (!navbar) {
+				this.scrollTicking = false;
+				return;
+			}
 			const windowsScrollTop = window.pageYOffset;
 			if (windowsScrollTop > 50) {
 				navbar.classList.add('affix');
@@ -62,10 +65,7 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 				{({ onUpdate, toggle }: NavProps) => {
 					return (
 						!isLoading && (
-							<nav
-								id="custom-nav"
-								className="navbar navbar-expand-md fixed-top navbar-light"
-							>
+							<nav id="custom-nav" className="navbar navbar-expand-md fixed-top navbar-light">
 								<div className="container nav-links">
 									<Link className="navbar-brand" onClick={onUpdate} to={'/'}>
 										bharney
@@ -120,174 +120,174 @@ export class NavMenu extends React.Component<NavMenuProps, {}> {
 										</ul>
 										<div className="d-none d-md-block d-lg-block d-xl-block">
 											<nav aria-label="Social media links">
-											<ul className="navbar-nav">
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0 mt-3 pt-0"
-														href="https://www.facebook.com/brian.harney.12"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Facebook"
-													>
-														<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://twitter.com/bharney0"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Twitter"
-													>
-														<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://www.instagram.com/porkchop.12/"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Instagram"
-													>
-														<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://www.linkedin.com/in/bharney0/"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="LinkedIn"
-													>
-														<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://github.com/bharney"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="GitHub"
-													>
-														<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://hub.docker.com/u/bharney0"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Docker Hub"
-													>
-														<FontAwesomeIcon icon={faDocker as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://stackoverflow.com/users/4740497/bharney"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Stack Overflow"
-													>
-														<FontAwesomeIcon
-															icon={faStackOverflow as IconProp}
-															transform="grow-6"
-														/>
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://paypal.me/BrianHarney?locale.x=en_US"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="PayPal"
-													>
-														<FontAwesomeIcon icon={faPaypal as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												{/* <UserMenu
+												<ul className="navbar-nav">
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0 mt-3 pt-0"
+															href="https://www.facebook.com/brian.harney.12"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Facebook"
+														>
+															<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://twitter.com/bharney0"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Twitter"
+														>
+															<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://www.instagram.com/porkchop.12/"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Instagram"
+														>
+															<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://www.linkedin.com/in/bharney0/"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="LinkedIn"
+														>
+															<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://github.com/bharney"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="GitHub"
+														>
+															<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://hub.docker.com/u/bharney0"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Docker Hub"
+														>
+															<FontAwesomeIcon icon={faDocker as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://stackoverflow.com/users/4740497/bharney"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Stack Overflow"
+														>
+															<FontAwesomeIcon
+																icon={faStackOverflow as IconProp}
+																transform="grow-6"
+															/>
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://paypal.me/BrianHarney?locale.x=en_US"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="PayPal"
+														>
+															<FontAwesomeIcon icon={faPaypal as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													{/* <UserMenu
 													{...accountActions}
 													{...alertActions}
 													{...sessionActions}
 													{...this.props}
 												/> */}
-											</ul>
+												</ul>
 											</nav>
 										</div>
 									</div>
 									<div className="d-inline-flex">
 										<div className="d-md-none d-lg-none d-xl-none">
 											<nav aria-label="Social media links">
-											<ul className="navbar-nav mobile-nav">
-												{/* <UserMenu
+												<ul className="navbar-nav mobile-nav">
+													{/* <UserMenu
 													{...accountActions}
 													{...alertActions}
 													{...sessionActions}
 													{...this.props}
 												/> */}
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://www.facebook.com/brian.harney.12"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Facebook"
-													>
-														<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://twitter.com/bharney0"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Twitter"
-													>
-														<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://www.instagram.com/porkchop.12/"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="Instagram"
-													>
-														<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://www.linkedin.com/in/bharney0/"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="LinkedIn"
-													>
-														<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
-													</a>
-												</li>
-												<li className="nav-item">
-													<a
-														className="nav-link root mt-3 pt-0"
-														href="https://github.com/bharney"
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label="GitHub"
-													>
-														<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
-													</a>
-												</li>
-											</ul>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://www.facebook.com/brian.harney.12"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Facebook"
+														>
+															<FontAwesomeIcon icon={faFacebook as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://twitter.com/bharney0"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Twitter"
+														>
+															<FontAwesomeIcon icon={faTwitter as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://www.instagram.com/porkchop.12/"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="Instagram"
+														>
+															<FontAwesomeIcon icon={faInstagram as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://www.linkedin.com/in/bharney0/"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="LinkedIn"
+														>
+															<FontAwesomeIcon icon={faLinkedin as IconProp} transform="grow-6" />
+														</a>
+													</li>
+													<li className="nav-item">
+														<a
+															className="nav-link root mt-3 pt-0"
+															href="https://github.com/bharney"
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label="GitHub"
+														>
+															<FontAwesomeIcon icon={faGithub as IconProp} transform="grow-6" />
+														</a>
+													</li>
+												</ul>
 											</nav>
 										</div>
 										<button

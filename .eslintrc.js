@@ -12,7 +12,7 @@ module.exports = {
 		'prettier',
 		'plugin:jest/recommended',
 		'plugin:jest/style',
-		'plugin:no-unsanitized/DOM'
+		'plugin:no-unsanitized/recommended-legacy'
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -37,20 +37,20 @@ module.exports = {
 		'@typescript-eslint/no-inferrable-types': 'off',
 		'@typescript-eslint/no-unnecessary-type-assertion': 'off',
 		'@typescript-eslint/require-await': 'off',
-		'@typescript-eslint/camelcase': 'off',
+		// '@typescript-eslint/camelcase' removed in v8; use @typescript-eslint/naming-convention instead
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'@typescript-eslint/adjacent-overload-signatures': 'error',
 		'@typescript-eslint/array-type': 'error',
 		'@typescript-eslint/consistent-type-assertions': 'off',
 		'@typescript-eslint/indent': ['off', 'tabs'],
-		'@typescript-eslint/interface-name-prefix': 'error',
+		// '@typescript-eslint/interface-name-prefix' removed in v8; use @typescript-eslint/naming-convention
 		'@typescript-eslint/member-ordering': 'error',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-empty-interface': 'error',
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-misused-new': 'error',
 		'@typescript-eslint/no-namespace': 'error',
-		'@typescript-eslint/no-parameter-properties': 'off',
+		// '@typescript-eslint/no-parameter-properties' removed in v8
 		'@typescript-eslint/no-unused-expressions': 'error',
 		'@typescript-eslint/no-use-before-define': [
 			'error',
@@ -68,11 +68,7 @@ module.exports = {
 		'@typescript-eslint/prefer-namespace-keyword': 'error',
 		'@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
 		'@typescript-eslint/prefer-includes': 'off',
-		'@typescript-eslint/quotes': [
-			'error',
-			'single',
-			{ allowTemplateLiterals: true, avoidEscape: true }
-		],
+		quotes: ['error', 'single', { allowTemplateLiterals: true, avoidEscape: true }],
 		'@typescript-eslint/triple-slash-reference': 'error',
 		'@typescript-eslint/unified-signatures': 'error',
 		'arrow-parens': ['error', 'as-needed'],
@@ -126,20 +122,8 @@ module.exports = {
 		'use-isnan': 'error',
 		'valid-typeof': 'off',
 		'@typescript-eslint/unbound-method': 'off',
-		'@typescript-eslint/member-delimiter-style': [
-			'error',
-			{
-				multiline: {
-					delimiter: 'semi',
-					requireLast: true
-				},
-				singleline: {
-					delimiter: 'semi',
-					requireLast: false
-				}
-			}
-		],
-		'@typescript-eslint/ban-ts-ignore': 'off',
+		// '@typescript-eslint/member-delimiter-style' was removed in v8; use @stylistic/ts if needed
+		// '@typescript-eslint/ban-ts-ignore' removed in v8; use @typescript-eslint/ban-ts-comment
 		'@typescript-eslint/prefer-string-starts-ends-with': 'off',
 		'@typescript-eslint/prefer-regexp-exec': 'off',
 		'no-unused-expressions': 'off',
@@ -148,7 +132,7 @@ module.exports = {
 		'import/no-unresolved': [2, { ignore: ['bundle-text'] }],
 		'import/no-cycle': [2, { maxDepth: 10 }],
 		semi: ['error', 'always'],
-		'@typescript-eslint/interface-name-prefix': 'off',
+		// '@typescript-eslint/interface-name-prefix' removed in v8
 		'@typescript-eslint/no-unsafe-assignment': 'error',
 		'@typescript-eslint/no-unsafe-member-access': 'error',
 		'@typescript-eslint/no-floating-promises': 'off',
@@ -158,7 +142,7 @@ module.exports = {
 		'@typescript-eslint/ban-ts-comment': 'off',
 		'@typescript-eslint/restrict-template-expressions': 'error',
 		'@typescript-eslint/restrict-plus-operands': 'error',
-		'@typescript-eslint/ban-types': 'error',
+		'@typescript-eslint/no-restricted-types': 'error',
 		'@typescript-eslint/no-this-alias': 'off',
 		'@typescript-eslint/naming-convention': [
 			'error',
@@ -168,12 +152,20 @@ module.exports = {
 			},
 			{
 				selector: 'variable',
-				format: ['camelCase', 'UPPER_CASE']
+				format: ['camelCase', 'PascalCase', 'UPPER_CASE']
+			},
+			{
+				selector: 'function',
+				format: ['camelCase', 'PascalCase']
 			},
 			{
 				selector: 'parameter',
-				format: ['camelCase'],
+				format: ['camelCase', 'PascalCase'],
 				leadingUnderscore: 'allow'
+			},
+			{
+				selector: 'import',
+				format: ['camelCase', 'PascalCase']
 			},
 			{
 				selector: 'memberLike',

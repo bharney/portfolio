@@ -1,52 +1,114 @@
 class ParallaxPart {
-	private el: HTMLElement;
-	private speed: number;
+	readonly el: HTMLElement;
+	readonly speed: number;
 
 	constructor(el: HTMLElement) {
 		this.el = el;
-		this.speed = parseFloat(this.el.getAttribute('data-parallax-speed') || '0');
-	}
-
-	update(scrollY: number): void {
-		// speed=0 → layer stays fixed (doesn't move at all)
-		// speed=1 → layer moves with normal scroll (disappears at same rate as page)
-		// Values in between create the parallax depth effect
-		const offset = -(scrollY * this.speed);
-		this.el.style.transform = `translate3d(0, ${offset}px, 0)`;
+		this.speed = parseFloat(el.getAttribute('data-parallax-speed') || '0');
 	}
 }
 
+/**
+ * Performant parallax scroll manager.
+ *
+ * Design choices (see developer.chrome.com/blog/performant-parallaxing):
+ *  • One passive scroll listener stores scrollY; no DOM reads inside rAF.
+ *  • A single rAF loop applies `translate3d` (compositor-friendly) to every layer.
+ *  • The loop auto-pauses when the parallax container scrolls out of view
+ *    (IntersectionObserver) so off-screen frames are free.
+ *  • `destroy()` tears everything down for React unmount / route changes.
+ */
 class ParallaxManager {
 	private parts: ParallaxPart[] = [];
-	private ticking = false;
+	private scrollY = 0;
+	private rafId = 0;
+	private running = false;
+	private visible = true;
+	private observer: IntersectionObserver | null = null;
+	private readonly onScrollBound: () => void;
 
-	constructor(selector: string) {
+	constructor(selector: string, container?: string) {
 		const nodeList = document.querySelectorAll<HTMLElement>(selector);
 		if (nodeList.length === 0) {
 			throw new Error('Parallax: No elements found');
 		}
+
 		for (const el of Array.from(nodeList)) {
 			this.parts.push(new ParallaxPart(el));
 		}
-		window.addEventListener('scroll', this.onScroll.bind(this), { passive: true });
-		this.scrollHandler();
+
+		// Capture initial scroll position and apply it immediately (avoids flash)
+		this.scrollY = Math.max(window.scrollY, 0);
+		this.applyTransforms();
+
+		// Passive scroll listener — only stores the value, never reads DOM
+		this.onScrollBound = () => {
+			this.scrollY = Math.max(window.scrollY, 0);
+		};
+		window.addEventListener('scroll', this.onScrollBound, { passive: true });
+
+		// Pause the rAF loop when the parallax section leaves the viewport
+		const containerEl = container
+			? document.querySelector(container)
+			: document.querySelector('.parallax-container');
+		if (containerEl && typeof IntersectionObserver !== 'undefined') {
+			this.observer = new IntersectionObserver(
+				([entry]) => {
+					this.visible = entry.isIntersecting;
+					if (this.visible && !this.running) this.start();
+				},
+				{ threshold: 0 }
+			);
+			this.observer.observe(containerEl);
+		}
+
+		this.start();
 	}
 
-	private onScroll(): void {
-		if (!this.ticking) {
-			this.ticking = true;
-			window.requestAnimationFrame(() => {
-				this.scrollHandler();
-				this.ticking = false;
-			});
+	/* ---- rAF loop ---- */
+
+	private start(): void {
+		if (this.running) return;
+		this.running = true;
+		this.tick();
+	}
+
+	private tick = (): void => {
+		if (!this.running) return;
+
+		// Skip work when the container is off-screen
+		if (this.visible) {
+			this.applyTransforms();
+		}
+
+		this.rafId = requestAnimationFrame(this.tick);
+	};
+
+	private applyTransforms(): void {
+		const y = this.scrollY;
+		const parts = this.parts;
+		for (let i = 0, len = parts.length; i < len; i++) {
+			const p = parts[i];
+			// speed 0 → layer stays fixed; speed 1 → moves with scroll
+			p.el.style.transform = `translate3d(0,${-(y * p.speed)}px,0)`;
 		}
 	}
 
-	private scrollHandler(): void {
-		const scrollY = Math.max(window.pageYOffset, 0);
-		for (const part of this.parts) {
-			part.update(scrollY);
+	/* ---- cleanup ---- */
+
+	destroy(): void {
+		this.running = false;
+		cancelAnimationFrame(this.rafId);
+		window.removeEventListener('scroll', this.onScrollBound);
+		if (this.observer) {
+			this.observer.disconnect();
+			this.observer = null;
 		}
+		// Reset transforms so stale state doesn't linger
+		for (const p of this.parts) {
+			p.el.style.transform = '';
+		}
+		this.parts = [];
 	}
 }
 
