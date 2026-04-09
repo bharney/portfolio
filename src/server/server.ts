@@ -3,7 +3,7 @@ import compression from 'compression';
 import { errorMiddleware } from './middleware/errorMiddleware';
 import { reactMiddleware } from './middleware/reactMiddleware';
 import { PUBLIC_DIR_PATH } from './configuration';
-import * as reactAsync from './ssr/renderReactAsync';
+import { renderReactStream } from './ssr/renderReactStream';
 
 // we split the express app definition in a module separated from the entry point because it's easier to test.
 
@@ -33,16 +33,10 @@ export function createServer() {
 		})
 	);
 
-	server.get('/', async (req, res) => {
-		const model = {
-			id: 123,
-			message: 'This data came from the server'
-		};
-
+	server.get('/', (req, res) => {
 		try {
-			const html = await reactAsync.renderReactAsync(req.url, model);
-			return res.status(200).contentType('text/html').send(html);
 		} catch {
+			renderReactStream(req.url, res);
 			return res.status(500).send('Internal server error');
 		}
 	});

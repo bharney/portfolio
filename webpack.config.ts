@@ -69,8 +69,15 @@ function createServerConfig(_env: Env): Configuration {
 					exclude: /node_modules/
 				},
 				{
+					// Server-side: resolve CSS/SCSS imports without injecting into DOM.
+					// css-loader with exportOnlyLocals extracts class name mappings
+					// (needed for CSS modules) without producing any style output.
 					test: /\.(sass|css|scss)$(\?|$)/,
-					use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+					use: [
+						{ loader: 'css-loader', options: { modules: { exportOnlyLocals: true } } },
+						'postcss-loader',
+						'sass-loader'
+					]
 				},
 				{
 					// Match client's asset module config (except emitFile: false equivalent)

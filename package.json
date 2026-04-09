@@ -9,10 +9,6 @@
 		"*.css",
 		"*.scss"
 	],
-	"workspaces": [
-		"server",
-		"client"
-	],
 	"scripts": {
 		"start": "node ./dist/app.js",
 		"test:client": "npx jest",
