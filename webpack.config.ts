@@ -2,9 +2,7 @@ import {
 	DefinePlugin,
 	Configuration,
 	NormalModuleReplacementPlugin,
-	ProvidePlugin,
-	LoaderOptionsPlugin,
-	Compilation
+	LoaderOptionsPlugin
 } from 'webpack';
 import 'webpack-dev-server';
 import { resolve } from 'path';
@@ -186,7 +184,12 @@ function createClientConfig(env: Env): Configuration {
 			]
 		},
 		plugins: [
-			new CleanWebpackPlugin(),
+			// Only clean dist/public on initial build; skip during watch rebuilds so the
+			// server can always find index.html and other assets.
+			new CleanWebpackPlugin({
+				cleanStaleWebpackAssets: true,
+				cleanOnceBeforeBuildPatterns: env.production ? ['**/*'] : []
+			}),
 			new LoaderOptionsPlugin({
 				minimize: true,
 				debug: false,
@@ -464,9 +467,9 @@ function createClientConfig(env: Env): Configuration {
 
 export default function (e: any) {
 	const env: Env = {
-		hot: !!e['HOT'],
-		production: !!e['PRODUCTION'],
-		analyze: !!e['ANALYZE']
+		hot: !!e.HOT,
+		production: !!e.PRODUCTION,
+		analyze: !!e.ANALYZE
 	};
 
 	const baseConfig = createBaseConfig(env);

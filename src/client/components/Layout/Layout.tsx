@@ -5,8 +5,7 @@ import * as AccountState from '../../store/Account';
 import * as AlertState from '../../store/Alert';
 import * as SessionState from '../../store/Session';
 import { SliderMenu } from '../Slider/SliderMenu';
-import Alert from './AlertComponent';
-import { MouseEventHandler } from 'react';
+import Alert from '../Alert/AlertComponent';
 
 interface NavProps {
 	on: boolean;
@@ -17,8 +16,10 @@ type LayoutProps = ApplicationState & {
 	accountActions: typeof AccountState.actionCreators;
 	sessionActions: typeof SessionState.actionCreators;
 	alertActions: typeof AlertState.default.actionCreators;
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 } & any;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export class Layout extends React.Component<LayoutProps, {}> {
 	public render() {
 		return (
@@ -34,7 +35,7 @@ export class Layout extends React.Component<LayoutProps, {}> {
 								id="slider"
 								className={`row row-offcanvas row-offcanvas-right content ${on ? ' active' : ''}`}
 							>
-								<div className="col-12 col-md-12 col-lg-9">{this.props.children}</div>
+								<div className="col-12 col-md-12 col-lg-9 header">{this.props.children}</div>
 								<div id="sidebar" className="col-8 col-md-0 col-lg-3 sidebar-offcanvas">
 									<div className="list-group">
 										<SliderMenu />

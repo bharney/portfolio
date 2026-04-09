@@ -10,7 +10,7 @@ export default class Footer extends React.Component<{}, {}> {
 				<hr />
 				<div className="row">
 					<div className="col">
-						<p>
+						<p className="text-dark">
 							Made with{' '}
 							<FontAwesomeIcon
 								className="svg-inline--fa fa-w-16 fa-lg"

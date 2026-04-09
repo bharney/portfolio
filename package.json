@@ -18,7 +18,7 @@
 		"test:client": "npx jest",
 		"build": "cross-env NODE_ENV=production npx webpack --env PRODUCTION",
 		"start:client": "npx webpack serve --config-name client --env HOT",
-		"start:server": "npx concurrently \"npx webpack -w\" \"npx nodemon --watch dist/app.js dist/app.js\"",
+		"start:server": "npx webpack && npx concurrently \"npx webpack -w\" \"npx nodemon --delay 2 --watch dist/app.js --watch dist/public/index.html dist/app.js\"",
 		"lint": "eslint . --ext .ts",
 		"pre-push": "npm run lint && npm run test",
 		"pre-commit-prettier": "pretty-quick --staged --pattern \"**/*.{scss,ts,js,json,yml}\"",

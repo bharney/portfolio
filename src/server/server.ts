@@ -2,7 +2,6 @@ import express from 'express';
 import compression from 'compression';
 import { errorMiddleware } from './middleware/errorMiddleware';
 import { reactMiddleware } from './middleware/reactMiddleware';
-import { useRouting } from './middleware/routing';
 import { PUBLIC_DIR_PATH } from './configuration';
 import * as reactAsync from './ssr/renderReactAsync';
 
@@ -19,8 +18,13 @@ export function createServer() {
 			index: false, // we don't want the static middleware to serve index.html. The SSR content won't be served otherwise.
 			// Hashed files (js/css with chunkhash) get immutable long-term caching.
 			// Non-hashed files (favicon, robots.txt, sitemap) get a short cache with revalidation.
+			// In development, disable caching entirely so changes are always visible.
 			setHeaders(res, filePath) {
-				if (/\.[a-f0-9]{16,}\.(js|css|woff2|woff|webp|jpg|jpeg|png|gif|avif)$/.test(filePath)) {
+				if (!__PRODUCTION__) {
+					res.setHeader('Cache-Control', 'no-store');
+				} else if (
+					/\.[a-f0-9]{16,}\.(js|css|woff2|woff|webp|jpg|jpeg|png|gif|avif)$/.test(filePath)
+				) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 				} else {
 					res.setHeader('Cache-Control', 'public, max-age=3600');
