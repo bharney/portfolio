@@ -1,8 +1,8 @@
 import {
-    DefinePlugin,
-    Configuration,
-    NormalModuleReplacementPlugin,
-    LoaderOptionsPlugin
+	DefinePlugin,
+	Configuration,
+	NormalModuleReplacementPlugin,
+	LoaderOptionsPlugin
 } from 'webpack';
 import 'webpack-dev-server';
 import { resolve } from 'path';
@@ -15,6 +15,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 const autoprefixer = require('autoprefixer');
+
+const parallaxPreloadIds = [1, 15, 16];
 interface Env {
 	production: boolean;
 	hot: boolean;
@@ -294,10 +296,8 @@ function createClientConfig(env: Env): Configuration {
 									}))
 								];
 
-								// 3. Inject <link rel="preload"> for key parallax layers (LCP candidates)
-								//    Layer 0, 7, 10 are <8KB and inlined as data URLs — skip those
-								//    Preload the visually largest layers that the browser needs for first paint
-								const layerPreloads = [1, 15, 16]
+								// 3. Inject <link rel="preload"> for key parallax layers used in the hero.
+								const layerPreloads = parallaxPreloadIds
 									.map(n => {
 										const re = new RegExp(`images/Layer ${n}\\.[^.]+\\.webp$`);
 										return Object.keys(compilation.assets).find((name: string) => re.test(name));
@@ -393,57 +393,8 @@ function createClientConfig(env: Env): Configuration {
 									});
 								}
 
-								// 5. Inject inline layer background-image rules into critical CSS
-								//    so the browser discovers all parallax layer images immediately
-								//    instead of waiting for the async external stylesheet to load.
-								const layerZIndexBase = 3; // layer-0 starts at z-index:3
-								const layerRulesList: string[] = [];
-
-								for (let i = 0; i < 20; i++) {
-									const re = new RegExp(`images/Layer ${i}\\.[^.]+\\.webp$`);
-									const asset = Object.keys(compilation.assets).find((n: string) => re.test(n));
-									if (asset) {
-										// Layer has a separate file — reference it by URL
-										layerRulesList.push(
-											`.layer-${i}{z-index:${
-												layerZIndexBase + i
-											};background-image:url('/${asset}')}`
-										);
-									} else {
-										// Layer was inlined as a data URL by webpack's asset module (<8KB).
-										// Extract the full rule from the compiled CSS so it appears in critical CSS.
-										// Layer 0 is the LCP element — its data URL MUST be discoverable immediately.
-										const cssAssets = Object.keys(compilation.assets).filter((n: string) =>
-											n.endsWith('.css')
-										);
-										let found = false;
-										for (const cssName of cssAssets) {
-											const source = compilation.assets[cssName].source();
-											const cssText = typeof source === 'string' ? source : source.toString();
-											const ruleRe = new RegExp(`\\.layer-${i}\\{[^}]+\\}`);
-											const match = cssText.match(ruleRe);
-											if (match) {
-												layerRulesList.push(match[0]);
-												found = true;
-												break;
-											}
-										}
-										if (!found) {
-											// Fallback: just emit z-index so stacking order is correct
-											layerRulesList.push(`.layer-${i}{z-index:${layerZIndexBase + i}}`);
-										}
-									}
-								}
-
-								const layerRules = layerRulesList.join('');
-								if (layerRules) {
-									data.headTags.unshift({
-										tagName: 'style',
-										voidTag: false,
-										innerHTML: layerRules,
-										attributes: {}
-									});
-								}
+								// 5. Parallax layer background images now ship inline on the SSR markup,
+								// so no extra critical CSS injection is required here.
 
 								cb(null, data);
 							}
