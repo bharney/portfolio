@@ -16,7 +16,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 const autoprefixer = require('autoprefixer');
 
-const parallaxPreloadIds = [1, 15, 16];
+const parallaxPreloadIds = [0, 2, 5, 15];
 interface Env {
 	production: boolean;
 	hot: boolean;
@@ -227,7 +227,7 @@ function createClientConfig(env: Env): Configuration {
 							useShortDoctype: true,
 							minifyCSS: true,
 							minifyJS: true
-					  }
+						}
 					: false
 			}),
 			new CopyWebpackPlugin({
@@ -271,6 +271,15 @@ function createClientConfig(env: Env): Configuration {
 								const woffAssets = Object.keys(compilation.assets).filter(
 									(name: string) => name.endsWith('.woff') && !name.endsWith('.woff2')
 								);
+								const woff2Bases = new Set(
+									woff2Assets.map((name: string) =>
+										name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff2$/, '')
+									)
+								);
+								const woffPreloadAssets = woffAssets.filter((name: string) => {
+									const baseName = name.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '');
+									return !woff2Bases.has(baseName);
+								});
 								const fontPreloads = [
 									...woff2Assets.map((name: string) => ({
 										tagName: 'link',
@@ -283,7 +292,7 @@ function createClientConfig(env: Env): Configuration {
 											href: `/${name}`
 										}
 									})),
-									...woffAssets.map((name: string) => ({
+									...woffPreloadAssets.map((name: string) => ({
 										tagName: 'link',
 										voidTag: true,
 										attributes: {
@@ -299,24 +308,22 @@ function createClientConfig(env: Env): Configuration {
 								// 3. Inject <link rel="preload"> for key parallax layers used in the hero.
 								const layerPreloads = parallaxPreloadIds
 									.map(n => {
-										const re = new RegExp(`images/Layer ${n}\\.[^.]+\\.webp$`);
-										return Object.keys(compilation.assets).find((name: string) => re.test(name));
+										const re = new RegExp(`images/Layer ${n}-desktop\\.[^.]+\\.webp$`);
+										const matchedAsset = Object.keys(compilation.assets).find((name: string) =>
+											re.test(name)
+										);
+										return matchedAsset ? { id: n, asset: matchedAsset } : null;
 									})
-									.filter(Boolean)
-									.map(name => ({
+									.filter((preload): preload is { id: number; asset: string } => preload !== null)
+									.map(preload => ({
 										tagName: 'link',
 										voidTag: true,
 										attributes: {
 											rel: 'preload',
 											as: 'image',
 											type: 'image/webp',
-											...(name ===
-											Object.keys(compilation.assets).find((n: string) =>
-												/images\/Layer 1\./.test(n)
-											)
-												? { fetchpriority: 'high' }
-												: {}),
-											href: `/${name}`
+											...([2, 5, 15].includes(preload.id) ? { fetchpriority: 'high' } : {}),
+											href: `/${preload.asset}`
 										}
 									}));
 
@@ -361,7 +368,7 @@ function createClientConfig(env: Env): Configuration {
 										? woffAssets.find(
 												(wn: string) =>
 													wn.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '') === baseName
-										  )
+											)
 										: null;
 									const src = woffMatch
 										? `url('/${w2name}') format('woff2'),url('/${woffMatch}') format('woff')`

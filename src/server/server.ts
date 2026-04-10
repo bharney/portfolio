@@ -19,12 +19,13 @@ export function createServer() {
 			// Non-hashed files (favicon, robots.txt, sitemap) get a short cache with revalidation.
 			// In development, disable caching entirely so changes are always visible.
 			setHeaders(res, filePath) {
-				if (!__PRODUCTION__) {
-					res.setHeader('Cache-Control', 'no-store');
-				} else if (
-					/\.[a-f0-9]{16,}\.(js|css|woff2|woff|webp|jpg|jpeg|png|gif|avif)$/.test(filePath)
-				) {
+				const isHashedAsset =
+					/\.[a-f0-9]{16,}\.(js|css|woff2|woff|webp|jpg|jpeg|png|gif|avif)$/.test(filePath);
+
+				if (isHashedAsset) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+				} else if (!__PRODUCTION__) {
+					res.setHeader('Cache-Control', 'no-store');
 				} else if (/\.(woff2|woff|ttf|otf|eot)$/.test(filePath)) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 				} else {
