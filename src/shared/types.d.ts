@@ -1,5 +1,8 @@
 // static files declarations
 
+declare module '*.css';
+declare module '*.scss';
+declare module '*.sass';
 declare module '*.jpg';
 declare module '*.png';
 declare module '*.gif';
