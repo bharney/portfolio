@@ -16,10 +16,8 @@ type LayoutProps = ApplicationState & {
 	accountActions: typeof AccountState.actionCreators;
 	sessionActions: typeof SessionState.actionCreators;
 	alertActions: typeof AlertState.default.actionCreators;
-	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 } & any;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export class Layout extends React.Component<LayoutProps, {}> {
 	public render() {
 		return (

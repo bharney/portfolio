@@ -3,7 +3,6 @@ import compression from 'compression';
 import { errorMiddleware } from './middleware/errorMiddleware';
 import { reactMiddleware } from './middleware/reactMiddleware';
 import { PUBLIC_DIR_PATH } from './configuration';
-import { renderReactStream } from './ssr/renderReactStream';
 
 // we split the express app definition in a module separated from the entry point because it's easier to test.
 
@@ -32,14 +31,6 @@ export function createServer() {
 			}
 		})
 	);
-
-	server.get('/', (req, res) => {
-		try {
-		} catch {
-			renderReactStream(req.url, res);
-			return res.status(500).send('Internal server error');
-		}
-	});
 
 	// renders the react app as fallback. The corresponding route will be handled by react router
 	server.use(/.*/, reactMiddleware());

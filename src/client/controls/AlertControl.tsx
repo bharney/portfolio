@@ -20,8 +20,8 @@ export default class App extends React.Component<AlertProps, {}> {
 
     private renderAlert = (item: Alert) => {
         const styles = {
-            display: "block"
-        }
+            display: 'block'
+        };
         const closeAction = (e: any) => { e.preventDefault(); this.props.closeAlert(item.id); };
         return (
             <div key={item.id} className={'toast toast-' + item.alertType + ' alert alert-dismissable ' + `fade fade-${item.state}`} style={styles} role="alert">
@@ -31,5 +31,5 @@ export default class App extends React.Component<AlertProps, {}> {
                     </div>
                 </div>
         );
-    }
+    };
 }

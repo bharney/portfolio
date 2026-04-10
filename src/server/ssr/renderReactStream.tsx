@@ -1,13 +1,12 @@
 import React from 'react';
 import App from '../../client/App';
 import { renderToPipeableStream } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import fs from 'fs';
 import { HTML_TEMPLATE_PATH } from '../configuration';
 import { PrerenderData } from '../../shared/PrerenderedData';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
 import { rootReducers } from '../../client/store';
 import { Response } from 'express';
 
@@ -37,8 +36,7 @@ export function renderReactStream(url: string, res: Response, prerenderedObject?
 	const htmlAfter = templateHtml.slice(markerIndex + marker.length);
 
 	const store = configureStore({
-		reducer: rootReducers,
-		middleware: [thunk]
+		reducer: rootReducers
 	});
 
 	const WrappedApp = (

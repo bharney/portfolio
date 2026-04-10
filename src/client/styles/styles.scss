@@ -10,7 +10,7 @@
 @use './slider.scss';
 // end slider
 
-@import './colors.scss';
+@use './colors' as *;
 
 /* ----------------------- SELF-HOSTED FONTS ----------------------- */
 /* Eliminates external DNS/TLS to fonts.googleapis.com + fonts.gstatic.com */

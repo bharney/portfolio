@@ -1,9 +1,8 @@
-import { Action, Reducer } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { AppState, AppThunkAction, TypedDispatch, useAppDispatch, useAppSelector } from '.';
+import { Action, Reducer } from '@reduxjs/toolkit';
+import { AppThunkAction } from '.';
 import { Bearer, ErrorMessage } from '../models';
-import { decodeToken, removeToken, saveToken, unloadedTokenState } from '../utils/TokenUtility';
-import { AnyAction } from '@reduxjs/toolkit';
+import { decodeToken, saveToken, unloadedTokenState } from '../utils/TokenUtility';
+import { UnknownAction } from '@reduxjs/toolkit';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
@@ -40,22 +39,17 @@ export type KnownAction = RequiredTokenAction | ReceiveTokenAction;
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 export const actionCreators = {
 	requiredToken: (): AppThunkAction<RequiredTokenAction> => dispatch => {
-		let bearerFromStore: Bearer = unloadedTokenState();
+		const bearerFromStore: Bearer = unloadedTokenState();
 		dispatch({
 			type: 'REQUIRED_TOKEN',
 			username: bearerFromStore.name || '',
 			token: bearerFromStore
 		});
 	},
-	loadToken: (callback?: () => AnyAction): AnyAction => {
-		let bearerFromStore: Bearer = unloadedTokenState();
+	loadToken: (callback?: () => UnknownAction): UnknownAction => {
+		const bearerFromStore: Bearer = unloadedTokenState();
 		if (callback) {
-			const dispatch = useAppDispatch();
-			dispatch({
-				type: 'RECEIVE_TOKEN',
-				username: bearerFromStore.name || '',
-				token: bearerFromStore
-			});
+			// Return the callback action for callers that want custom dispatch behavior.
 			return callback();
 		} else {
 			return {
@@ -81,7 +75,7 @@ export const actionCreators = {
 					if ((data as ErrorMessage).error) {
 						dispatch({ type: 'RECEIVE_TOKEN', token: undefined, username: '' });
 					} else {
-						let BearerToken: Bearer | undefined = decodeToken(data);
+						const BearerToken: Bearer | undefined = decodeToken(data);
 						dispatch({
 							type: 'RECEIVE_TOKEN',
 							username: BearerToken?.name ?? '',
@@ -94,8 +88,8 @@ export const actionCreators = {
 					}
 				})
 				.catch(err => {
-					let token: Bearer = unloadedTokenState();
-					dispatch({ type: 'RECEIVE_TOKEN', token: token, username: '' });
+					const token: Bearer = unloadedTokenState();
+					dispatch({ type: 'RECEIVE_TOKEN', token, username: '' });
 				});
 			dispatch({ type: 'REQUEST_TOKEN' });
 		}
@@ -104,12 +98,12 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-let username: string = '';
-let token: Bearer = unloadedTokenState();
+const username: string = '';
+const token: Bearer = unloadedTokenState();
 const unloadedState: SessionState = {
-	token: token,
+	token,
 	isRequiredToken: false,
-	username: username,
+	username,
 	isRequiredRefreshOnClient: false,
 	isLoading: false
 };

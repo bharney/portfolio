@@ -1,13 +1,12 @@
 import React from 'react';
 import App from '../../client/App';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import fs from 'fs';
 import { HTML_TEMPLATE_PATH } from '../configuration';
 import { PrerenderData } from '../../shared/PrerenderedData';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
 import { rootReducers } from '../../client/store';
 /**
  * Renders the react App as a html string.
@@ -24,8 +23,7 @@ export async function renderReactAsync(url: string, prerenderedObject?: unknown)
 
 	const dataElement = PrerenderData.saveToDom(prerenderedObject);
 	const store = configureStore({
-		reducer: rootReducers,
-		middleware: [thunk]
+		reducer: rootReducers
 	});
 
 	const WrappedApp = (

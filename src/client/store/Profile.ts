@@ -1,4 +1,4 @@
-import { Action, Reducer } from 'redux';
+import { Action, Reducer } from '@reduxjs/toolkit';
 import { Bearer, ErrorMessage, ProfileViewModel } from '../models';
 import toFormData from '../utils/FormDataUtility';
 import { AppThunkAction } from './';
@@ -49,7 +49,7 @@ export type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 export const actionCreators = {
 	getProfile: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
-		let token = getState().session.token;
+		const token = getState().session.token;
 		if (token) {
 					dispatch({ type: 'RECEIVE_PROFILE', profile: undefined });
 
@@ -78,7 +78,7 @@ export const actionCreators = {
 		}
 	},
 	getProfiles: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
-		let token = getState().session.token;
+		const token = getState().session.token;
 		if (token) {
 			await fetch('/Manage/List', {
 				method: 'get',
@@ -112,9 +112,9 @@ export const actionCreators = {
 			error?: (error: ErrorMessage) => void
 		): AppThunkAction<KnownAction> =>
 		async (dispatch, getState) => {
-			let token = getState().session.token;
+			const token = getState().session.token;
 			if (token) {
-				let data = toFormData(value, undefined, undefined);
+				const data = toFormData(value, undefined, undefined);
 				if (value.imageUrl) {
 					if (value.imageUrl) {
 						data.append('type', 'file');
@@ -158,7 +158,7 @@ export const actionCreators = {
 ///Todo Update SessionStorage
 let bearerFromStore: Bearer = {};
 let username: string = '';
-let profile: ProfileViewModel = {};
+const profile: ProfileViewModel = {};
 if (typeof window !== 'undefined') {
 	if (window.sessionStorage) {
 		username = (<any>window).sessionStorage.username;
@@ -171,7 +171,7 @@ if (typeof window !== 'undefined') {
 
 const unloadedState: ProfileState = {
 	isLoading: false,
-	profile: profile,
+	profile,
 	profiles: [],
 	token: bearerFromStore.access_token ? bearerFromStore : undefined,
 	isRequiredToken: false,

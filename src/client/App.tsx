@@ -7,11 +7,11 @@ import { actionCreators as accountActions } from './store/Account';
 import AlertState from './store/Alert';
 import './styles/bootstrap-custom.scss';
 import './styles/styles.scss';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Loading from './components/Common/Loading';
 import Home from './components/Home/Home';
 import { Layout } from './components/Layout/Layout';
-import { NavContext, AuthContext } from './contexts';
+import { NavContext } from './contexts';
 const AsyncFooter = React.lazy(
 	() => import(/* webpackChunkName: "Footer" */ './components/Footer/Footer')
 );
@@ -33,7 +33,6 @@ interface Props {
 	serverData?: unknown;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 type AppProps = Props & any;
 
 interface On {
@@ -99,7 +98,6 @@ export const App = (props: AppProps) => {
 		}
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const { pca, ...rest } = props;
 
 	const navContextValue = {
@@ -109,7 +107,6 @@ export const App = (props: AppProps) => {
 		handleOverlayToggle
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const navProps = {
 		accountActions,
 		alertActions,

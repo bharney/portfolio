@@ -85,7 +85,7 @@ const portfolioItems: PortfolioItem[] = [
 		alt: 'bharney Portfolio',
 		title: 'bharney Portfolio',
 		link: 'https://parallax-afghd4g2byafgqeu.westus-01.azurewebsites.net/',
-		description: "Here in the wilderness theres plenty to see. You just might find a black bear out there. This site has been created by Brian Harney to reflect the types of things he enjoys."
+		description: 'Here in the wilderness theres plenty to see. You just might find a black bear out there. This site has been created by Brian Harney to reflect the types of things he enjoys.'
 	},
 	{
 		src: yogamariemills,

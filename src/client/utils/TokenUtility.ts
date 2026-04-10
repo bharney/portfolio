@@ -26,7 +26,7 @@ function removeToken() {
 
 function saveToken(BearerToken: Bearer) {
 	if (typeof window !== 'undefined') {
-		const cookieDataFromServer = (window as any)['cookieData'];
+		const cookieDataFromServer = (window as any).cookieData;
 		if (cookieDataFromServer) {
 			Object.getOwnPropertyNames(cookieDataFromServer).forEach(name => {
 				localStorage.setItem(name, cookieDataFromServer[name]);
@@ -45,14 +45,14 @@ function saveToken(BearerToken: Bearer) {
 }
 
 function decodeToken(data: Bearer | ErrorMessage) {
-	let token = (data as any).token;
+	const token = (data as any).token;
 	if (!token) {
 		return;
 	}
-	let base64Url = token.split('.')[1];
-	let base64 = base64Url.replace('-', '+').replace('_', '/');
-	let decoded = JSON.parse(window.atob(base64));
-	let BearerToken: Bearer = {
+	const base64Url = token.split('.')[1];
+	const base64 = base64Url.replace('-', '+').replace('_', '/');
+	const decoded = JSON.parse(window.atob(base64));
+	const BearerToken: Bearer = {
 		access_token: token,
 		audience: decoded.aud,
 		expires: decoded.exp,

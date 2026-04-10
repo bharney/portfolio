@@ -1,8 +1,8 @@
 import path from 'path';
 
-/*  
-    Environment configuration. 
-    You can replace or adapt this logic to use .env files 
+/*
+    Environment configuration.
+    You can replace or adapt this logic to use .env files
 */
 
 export const PORT = process.env.PORT ?? 9000;

@@ -1,3 +1,4 @@
+const purgecss = require('@fullhuman/postcss-purgecss').default || require('@fullhuman/postcss-purgecss');
 module.exports = {
 	plugins: [
 		require('autoprefixer'),
@@ -5,7 +6,7 @@ module.exports = {
 		// Only runs in production builds to keep dev experience fast
 		...(process.env.NODE_ENV === 'production'
 			? [
-					require('@fullhuman/postcss-purgecss')({
+					purgecss({
 						// Scan all TSX/HTML files for class names
 						content: [
 							'./src/client/**/*.tsx',

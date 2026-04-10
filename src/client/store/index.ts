@@ -3,8 +3,7 @@ import Alert, { AlertState } from './Alert';
 import * as Profile from './Profile';
 import * as Session from './Session';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { AnyAction, combineReducers } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { combineReducers, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 // The top-level state object
 export interface ApplicationState {
 	session: Session.SessionState;
@@ -26,7 +25,7 @@ export const rootReducers = combineReducers(reducers);
 
 export type AppState = ReturnType<typeof rootReducers>;
 
-export type TypedDispatch<T> = ThunkDispatch<T, any, AnyAction>;
+export type TypedDispatch<T> = ThunkDispatch<T, any, UnknownAction>;
 
 export const useAppDispatch = () => useDispatch<TypedDispatch<AppState>>();
 
@@ -34,6 +33,4 @@ export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
 // correctly typed to match your store.
-export interface AppThunkAction<TAction> {
-	(dispatch: (action: TAction) => void, getState: () => ApplicationState): void;
-}
+export type AppThunkAction<TAction> = (dispatch: (action: TAction) => void, getState: () => ApplicationState) => void;

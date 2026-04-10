@@ -1,6 +1,5 @@
-import { Action, Reducer } from 'redux';
+import { Action, Reducer } from '@reduxjs/toolkit';
 import {
-	AlertType,
 	Bearer,
 	ChangeEmailViewModel,
 	ChangePasswordViewModel,
@@ -92,7 +91,7 @@ export const actionCreators = {
 							error(data as ErrorMessage);
 						}
 					} else {
-						let BearerToken: Bearer | undefined = decodeToken(data);
+						const BearerToken: Bearer | undefined = decodeToken(data);
 						dispatch({
 							type: 'RECEIVE_TOKEN',
 							username: BearerToken?.name ?? '',
@@ -108,7 +107,7 @@ export const actionCreators = {
 					const token = unloadedTokenState();
 					dispatch({
 						type: 'RECEIVE_TOKEN',
-						token: token,
+						token,
 						username: token.name || ''
 					});
 				});
@@ -130,7 +129,7 @@ export const actionCreators = {
 		): AppThunkAction<KnownAction> =>
 		async dispatch => {
 			if (value.password !== value.confirmPassword) {
-				let errorMessage: ErrorMessage = {
+				const errorMessage: ErrorMessage = {
 					error_description: 'Password and Confirmation Password do not match.'
 				};
 				if (error) error(errorMessage);
@@ -160,7 +159,7 @@ export const actionCreators = {
 						const token = unloadedTokenState();
 						dispatch({
 							type: 'RECEIVE_TOKEN',
-							token: token,
+							token,
 							username: token.name || ''
 						});
 					});
@@ -193,9 +192,9 @@ export const actionCreators = {
 					}
 				})
 				.catch(() => {
-					dispatch({ type: 'REQUEST_VERIFICATION', username: undefined ?? '' });
+					dispatch({ type: 'REQUEST_VERIFICATION', username: '' });
 				});
-			dispatch({ type: 'REQUEST_VERIFICATION', username: username });
+			dispatch({ type: 'REQUEST_VERIFICATION', username });
 		},
 	changePassword:
 		(
@@ -220,7 +219,7 @@ export const actionCreators = {
 						if ((data as ErrorMessage).error) {
 							dispatch({ type: 'RECEIVE_TOKEN', token: undefined, username: '' });
 						} else {
-							let BearerToken: Bearer | undefined = decodeToken(data);
+							const BearerToken: Bearer | undefined = decodeToken(data);
 							dispatch({
 								type: 'RECEIVE_TOKEN',
 								username: BearerToken?.name ?? '',
@@ -233,7 +232,7 @@ export const actionCreators = {
 						}
 					})
 					.catch(err => {
-						let errorMessage: ErrorMessage = {
+						const errorMessage: ErrorMessage = {
 							error_description:
 								'Failed to change password. Please make sure your old password is correct.'
 						};
@@ -241,13 +240,13 @@ export const actionCreators = {
 						const token = unloadedTokenState();
 						dispatch({
 							type: 'RECEIVE_TOKEN',
-							token: token,
+							token,
 							username: token.name || ''
 						});
 					});
-				dispatch({ type: 'REQUEST_TOKEN', username: username });
+				dispatch({ type: 'REQUEST_TOKEN', username });
 			} else {
-				let errorMessage: ErrorMessage = {
+				const errorMessage: ErrorMessage = {
 					error_description:
 						'Your new password and confirmation password do not match. Please make sure they match.'
 				};
@@ -281,7 +280,7 @@ export const actionCreators = {
 						if ((data as ErrorMessage).error) {
 							dispatch({ type: 'RECEIVE_TOKEN', token: undefined, username: '' });
 						} else {
-							let BearerToken: Bearer | undefined = decodeToken(data);
+							const BearerToken: Bearer | undefined = decodeToken(data);
 							dispatch({
 								type: 'RECEIVE_TOKEN',
 								username: BearerToken?.name ?? '',
@@ -294,20 +293,20 @@ export const actionCreators = {
 						}
 					})
 					.catch(() => {
-						let errorMessage: ErrorMessage = {
+						const errorMessage: ErrorMessage = {
 							error_description: 'Failed to reset password.'
 						};
 						if (error) error(errorMessage);
 						const token = unloadedTokenState();
 						dispatch({
 							type: 'RECEIVE_TOKEN',
-							token: token,
+							token,
 							username: token.name || ''
 						});
 					});
-				dispatch({ type: 'REQUEST_TOKEN', username: username });
+				dispatch({ type: 'REQUEST_TOKEN', username });
 			} else {
-				let errorMessage: ErrorMessage = {
+				const errorMessage: ErrorMessage = {
 					error_description: 'You cannot have any empty fields, and the password fields must match.'
 				};
 				if (error) error(errorMessage);
@@ -320,11 +319,11 @@ export const actionCreators = {
 			error?: (error: ErrorMessage) => void
 		): AppThunkAction<KnownAction> =>
 		async (dispatch, getState) => {
-			let token = getState().session.token;
+			const token = getState().session.token;
 			let fetchTask: Promise<any>;
 			if (token) {
 				if (!value.userName && value.userName != token.name) {
-					let errorMessage: ErrorMessage = {
+					const errorMessage: ErrorMessage = {
 						error_description:
 							'Failed to delete account. Please make sure you typed your email correctly.'
 					};
@@ -348,7 +347,7 @@ export const actionCreators = {
 								}
 							} else {
 								removeToken();
-								let BearerToken: Bearer | undefined = decodeToken(data);
+								const BearerToken: Bearer | undefined = decodeToken(data);
 								dispatch({
 									type: 'RECEIVE_TOKEN',
 									username: BearerToken?.name ?? '',
@@ -364,7 +363,7 @@ export const actionCreators = {
 							const token = unloadedTokenState();
 							dispatch({
 								type: 'RECEIVE_TOKEN',
-								token: token,
+								token,
 								username: token.name || ''
 							});
 						});
@@ -373,7 +372,7 @@ export const actionCreators = {
 			}
 		},
 	downloadAccountData: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
-		let token = getState().session.token;
+		const token = getState().session.token;
 		if (token) {
 			await fetch('/Account/Download', {
 				method: 'get',
@@ -397,10 +396,10 @@ export const actionCreators = {
 			error?: (error: ErrorMessage) => void
 		): AppThunkAction<KnownAction> =>
 		async (dispatch, getState) => {
-			let token = getState().session.token;
+			const token = getState().session.token;
 			if (token) {
 				if (!value.unConfirmedEmail && value.confirmedEmail != token.name) {
-					let errorMessage: ErrorMessage = {
+					const errorMessage: ErrorMessage = {
 						error_description:
 							'Failed to delete account. Please make sure you typed your email correctly.'
 					};
@@ -424,7 +423,7 @@ export const actionCreators = {
 								}
 							} else {
 								removeToken();
-								let BearerToken: Bearer | undefined = decodeToken(data);
+								const BearerToken: Bearer | undefined = decodeToken(data);
 								dispatch({
 									type: 'RECEIVE_TOKEN',
 									username: BearerToken?.name ?? '',
@@ -440,7 +439,7 @@ export const actionCreators = {
 							const token = unloadedTokenState();
 							dispatch({
 								type: 'RECEIVE_TOKEN',
-								token: token,
+								token,
 								username: token.name || ''
 							});
 						});
@@ -472,7 +471,7 @@ export const actionCreators = {
 						}
 					} else {
 						removeToken();
-						let BearerToken: Bearer | undefined = decodeToken(data);
+						const BearerToken: Bearer | undefined = decodeToken(data);
 						dispatch({
 							type: 'RECEIVE_TOKEN',
 							username: BearerToken?.name ?? '',
@@ -488,7 +487,7 @@ export const actionCreators = {
 					const token = unloadedTokenState();
 					dispatch({
 						type: 'RECEIVE_TOKEN',
-						token: token,
+						token,
 						username: token.name || ''
 					});
 				});
@@ -516,7 +515,7 @@ export const actionCreators = {
 						}
 					} else {
 						removeToken();
-						let BearerToken: Bearer | undefined = decodeToken(data);
+						const BearerToken: Bearer | undefined = decodeToken(data);
 						dispatch({
 							type: 'RECEIVE_TOKEN',
 							username: BearerToken?.name ?? '',
@@ -532,7 +531,7 @@ export const actionCreators = {
 					const token = unloadedTokenState();
 					dispatch({
 						type: 'RECEIVE_TOKEN',
-						token: token,
+						token,
 						username: token.name || ''
 					});
 				});
@@ -541,12 +540,12 @@ export const actionCreators = {
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-let username: string = '';
-let token = unloadedTokenState();
+const username: string = '';
+const token = unloadedTokenState();
 const unloadedState: AccountState = {
-	token: token,
+	token,
 	isRequiredToken: false,
-	username: username,
+	username,
 	isRequiredRefreshOnClient: false,
 	isLoading: false
 };

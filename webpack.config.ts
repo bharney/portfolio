@@ -1,8 +1,8 @@
 import {
-	DefinePlugin,
-	Configuration,
-	NormalModuleReplacementPlugin,
-	LoaderOptionsPlugin
+    DefinePlugin,
+    Configuration,
+    NormalModuleReplacementPlugin,
+    LoaderOptionsPlugin
 } from 'webpack';
 import 'webpack-dev-server';
 import { resolve } from 'path';
@@ -76,7 +76,7 @@ function createServerConfig(_env: Env): Configuration {
 					use: [
 						{ loader: 'css-loader', options: { modules: { exportOnlyLocals: true } } },
 						'postcss-loader',
-						'sass-loader'
+						{ loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } }
 					]
 				},
 				{
@@ -90,7 +90,11 @@ function createServerConfig(_env: Env): Configuration {
 				},
 				{
 					test: /\.(woff|woff2|eot|ttf)(\?|$)/,
-					use: 'url-loader?limit=100000'
+					type: 'asset/resource',
+					generator: {
+						filename: 'fonts/[name].[contenthash][ext]',
+						emit: false
+					}
 				}
 			]
 		},
@@ -185,7 +189,7 @@ function createClientConfig(env: Env): Configuration {
 						env.production ? MiniCssExtractPlugin.loader : 'style-loader',
 						'css-loader',
 						'postcss-loader',
-						'sass-loader'
+						{ loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } }
 					]
 				}
 			]

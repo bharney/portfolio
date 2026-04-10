@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { NavContext } from '../../contexts';
 import * as AccountState from '../../store/Account';
 import AlertState from '../../store/Alert';

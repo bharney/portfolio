@@ -1,4 +1,4 @@
-@import './colors.scss';
+@use './colors' as *;
 
 #sidebar {
 	margin-top: 10em;
