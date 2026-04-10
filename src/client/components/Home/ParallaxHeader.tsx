@@ -20,7 +20,6 @@ const ParallaxHeader: React.FC = () => (
 		<div className="parallax-layer layer-14" data-parallax-speed="0.49"></div>
 		<div className="parallax-layer layer-15" data-parallax-speed="0.55"></div>
 		<div className="parallax-layer layer-16" data-parallax-speed="0.61"></div>
-		<div className="parallax-layer layer-17" data-parallax-speed="0.67"></div>
 		<div className="parallax-layer layer-18" data-parallax-speed="0.74"></div>
 		<div className="parallax-layer layer-19" data-parallax-speed="0.80"></div>
 		<div className="parallax-layer parallax-hero-content" data-parallax-speed="1.0">
