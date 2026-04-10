@@ -227,7 +227,7 @@ function createClientConfig(env: Env): Configuration {
 							useShortDoctype: true,
 							minifyCSS: true,
 							minifyJS: true
-					  }
+						}
 					: false
 			}),
 			new CopyWebpackPlugin({
@@ -314,9 +314,7 @@ function createClientConfig(env: Env): Configuration {
 										);
 										return matchedAsset ? { id: n, asset: matchedAsset } : null;
 									})
-									.filter(
-										(preload): preload is { id: number; asset: string } => preload !== null
-									)
+									.filter((preload): preload is { id: number; asset: string } => preload !== null)
 									.map(preload => ({
 										tagName: 'link',
 										voidTag: true,
@@ -324,9 +322,7 @@ function createClientConfig(env: Env): Configuration {
 											rel: 'preload',
 											as: 'image',
 											type: 'image/webp',
-											...([2, 5, 15].includes(preload.id)
-												? { fetchpriority: 'high' }
-												: {}),
+											...([2, 5, 15].includes(preload.id) ? { fetchpriority: 'high' } : {}),
 											href: `/${preload.asset}`
 										}
 									}));
@@ -372,7 +368,7 @@ function createClientConfig(env: Env): Configuration {
 										? woffAssets.find(
 												(wn: string) =>
 													wn.replace(/^fonts\//, '').replace(/\.[a-f0-9]+\.woff$/, '') === baseName
-										  )
+											)
 										: null;
 									const src = woffMatch
 										? `url('/${w2name}') format('woff2'),url('/${woffMatch}') format('woff')`

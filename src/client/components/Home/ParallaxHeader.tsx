@@ -31,12 +31,12 @@ const ParallaxHeader: React.FC = () => (
 						src={layer.mobileImage}
 						alt=""
 						aria-hidden="true"
-						loading={isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'eager' : 'lazy'}
+						loading={
+							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'eager' : 'lazy'
+						}
 						decoding="async"
 						fetchPriority={
-							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id)
-								? 'high'
-								: 'auto'
+							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'high' : 'auto'
 						}
 						sizes="100vw"
 					/>
