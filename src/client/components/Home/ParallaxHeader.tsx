@@ -1,21 +1,11 @@
 import * as React from 'react';
-import { parallaxLcpDesktopImage, parallaxLcpMobileImage, parallaxLayers } from './parallaxLayers';
+import { parallaxLayers } from './parallaxLayers';
 
 const isHighPriorityLayer = (id: number): boolean => id === 0 || id === 2 || id === 5;
 const isLikelyDesktopLcpLayer = (id: number): boolean => id === 15;
 
 const ParallaxHeader: React.FC = () => (
 	<section className="parallax-container" aria-label="Hero">
-		<picture className="parallax-lcp-preload" aria-hidden="true">
-			<source media="(min-width: 768px)" srcSet={parallaxLcpDesktopImage} />
-			<img
-				src={parallaxLcpMobileImage}
-				alt=""
-				loading="eager"
-				decoding="async"
-				fetchPriority="high"
-			/>
-		</picture>
 		<div className="parallax-layer cover" data-parallax-speed="0"></div>
 		{parallaxLayers.map(layer => (
 			<div
