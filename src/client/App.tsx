@@ -44,10 +44,8 @@ export const App = (props: AppProps) => {
 	const handleSidebarPosition = () => {
 		const sidebar = document.getElementById('sidebar');
 		if (!sidebar) return;
-		const bounding = sidebar.getBoundingClientRect();
-		const offset = bounding.top + document.body.scrollTop;
-		let totalOffset = (offset - 100) * -1;
-		totalOffset = totalOffset < 0 ? 0 : totalOffset;
+		// Avoid layout-thrashing geometry reads during toggle; use scroll position only.
+		const totalOffset = Math.max(window.scrollY - 100, 0);
 		sidebar.style.top = totalOffset + 'px';
 		document.documentElement.style.overflowY = 'hidden';
 	};
