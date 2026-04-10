@@ -287,7 +287,7 @@ main {
 	.parallax-container {
 		position: relative;
 		/* Break out of the parent grid column to fill the full viewport width */
-		width: 120vw;
+		width: 100vw;
 		margin-left: calc(-50vw + 50%);
 		/* Pull up behind the fixed navbar so the hero fills the full viewport */
 		margin-top: -70px;
@@ -297,6 +297,23 @@ main {
 		clip-path: inset(0);
 		background-color: #0a2a3a;
 		z-index: 1;
+	}
+
+	.parallax-lcp-preload {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		opacity: 0;
+		pointer-events: none;
+		z-index: 0;
+
+		img {
+			width: 1px;
+			height: 1px;
+		}
 	}
 
 	.parallax-layer {
