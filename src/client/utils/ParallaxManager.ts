@@ -22,8 +22,8 @@ class ParallaxManager {
 	private parts: ParallaxPart[] = [];
 	private scrollY = 0;
 	private rafId = 0;
-	private running = false;
 	private visible = true;
+	private lastAppliedY = -1;
 	private observer: IntersectionObserver | null = null;
 	private readonly onScrollBound: () => void;
 
@@ -39,11 +39,12 @@ class ParallaxManager {
 
 		// Capture initial scroll position and apply it immediately (avoids flash)
 		this.scrollY = Math.max(window.scrollY, 0);
-		this.applyTransforms();
+		this.requestTransformUpdate();
 
 		// Passive scroll listener — only stores the value, never reads DOM
 		this.onScrollBound = () => {
 			this.scrollY = Math.max(window.scrollY, 0);
+			this.requestTransformUpdate();
 		};
 		window.addEventListener('scroll', this.onScrollBound, { passive: true });
 
@@ -55,37 +56,29 @@ class ParallaxManager {
 			this.observer = new IntersectionObserver(
 				([entry]) => {
 					this.visible = entry.isIntersecting;
-					if (this.visible && !this.running) this.start();
+					if (this.visible) this.requestTransformUpdate();
 				},
 				{ threshold: 0 }
 			);
 			this.observer.observe(containerEl);
 		}
-
-		this.start();
 	}
 
-	/* ---- rAF loop ---- */
+	/* ---- rAF update scheduling ---- */
 
-	private start(): void {
-		if (this.running) return;
-		this.running = true;
-		this.tick();
-	}
-
-	private tick = (): void => {
-		if (!this.running) return;
-
-		// Skip work when the container is off-screen
-		if (this.visible) {
+	private requestTransformUpdate(): void {
+		if (!this.visible || this.rafId !== 0) return;
+		this.rafId = requestAnimationFrame(() => {
+			this.rafId = 0;
 			this.applyTransforms();
-		}
-
-		this.rafId = requestAnimationFrame(this.tick);
-	};
+		});
+	}
 
 	private applyTransforms(): void {
 		const y = this.scrollY;
+		if (y === this.lastAppliedY) return;
+		this.lastAppliedY = y;
+
 		const parts = this.parts;
 		for (let i = 0, len = parts.length; i < len; i++) {
 			const p = parts[i];
@@ -97,8 +90,8 @@ class ParallaxManager {
 	/* ---- cleanup ---- */
 
 	destroy(): void {
-		this.running = false;
 		cancelAnimationFrame(this.rafId);
+		this.rafId = 0;
 		window.removeEventListener('scroll', this.onScrollBound);
 		if (this.observer) {
 			this.observer.disconnect();
