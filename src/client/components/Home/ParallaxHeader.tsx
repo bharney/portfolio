@@ -1,8 +1,18 @@
 import * as React from 'react';
-import { parallaxLayers } from './parallaxLayers';
+import { parallaxLcpDesktopImage, parallaxLcpMobileImage, parallaxLayers } from './parallaxLayers';
 
 const ParallaxHeader: React.FC = () => (
 	<section className="parallax-container" aria-label="Hero">
+		<picture className="parallax-lcp-preload" aria-hidden="true">
+			<source media="(max-width: 767px)" srcSet={parallaxLcpMobileImage} />
+			<img
+				src={parallaxLcpDesktopImage}
+				alt=""
+				loading="eager"
+				decoding="async"
+				fetchPriority="high"
+			/>
+		</picture>
 		<div className="parallax-layer cover" data-parallax-speed="0"></div>
 		{parallaxLayers.map(layer => (
 			<div

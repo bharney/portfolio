@@ -43,5 +43,7 @@ export const parallaxLayers: ParallaxLayerConfig[] = [
 	{ id: 16, speed: 0.68, zIndex: 19, image: layer16 }
 ];
 
+export const parallaxLcpMobileImage = layer0;
+export const parallaxLcpDesktopImage = layer2;
 export const parallaxLayerIds = parallaxLayers.map(layer => layer.id);
 export const parallaxPreloadIds = [1, 16, 17];
