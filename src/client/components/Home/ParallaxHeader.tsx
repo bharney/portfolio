@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { parallaxLcpDesktopImage, parallaxLcpMobileImage, parallaxLayers } from './parallaxLayers';
 
-const isHighPriorityLayer = (id: number): boolean => id === 0 || id === 2;
+const isHighPriorityLayer = (id: number): boolean => id === 0 || id === 2 || id === 5;
+const isLikelyDesktopLcpLayer = (id: number): boolean => id === 15;
 
 const ParallaxHeader: React.FC = () => (
 	<section className="parallax-container" aria-label="Hero">
 		<picture className="parallax-lcp-preload" aria-hidden="true">
-			<source media="(max-width: 767px)" srcSet={parallaxLcpMobileImage} />
+			<source media="(min-width: 768px)" srcSet={parallaxLcpDesktopImage} />
 			<img
-				src={parallaxLcpDesktopImage}
+				src={parallaxLcpMobileImage}
 				alt=""
 				loading="eager"
 				decoding="async"
@@ -23,15 +24,23 @@ const ParallaxHeader: React.FC = () => (
 				data-parallax-speed={layer.speed}
 				style={{ zIndex: layer.zIndex }}
 			>
-				<img
-					className="parallax-layer-image"
-					src={layer.image}
-					alt=""
-					aria-hidden="true"
-					loading={isHighPriorityLayer(layer.id) ? 'eager' : 'lazy'}
-					decoding="async"
-					fetchPriority={isHighPriorityLayer(layer.id) ? 'high' : 'auto'}
-				/>
+				<picture>
+					<source media="(min-width: 768px)" srcSet={layer.desktopImage} />
+					<img
+						className="parallax-layer-image"
+						src={layer.mobileImage}
+						alt=""
+						aria-hidden="true"
+						loading={isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'eager' : 'lazy'}
+						decoding="async"
+						fetchPriority={
+							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id)
+								? 'high'
+								: 'auto'
+						}
+						sizes="100vw"
+					/>
+				</picture>
 			</div>
 		))}
 		<div className="parallax-layer parallax-hero-content" data-parallax-speed="1.0">
