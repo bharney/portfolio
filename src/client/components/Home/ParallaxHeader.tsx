@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { parallaxLcpDesktopImage, parallaxLcpMobileImage, parallaxLayers } from './parallaxLayers';
 
+const isHighPriorityLayer = (id: number): boolean => id === 0 || id === 2;
+
 const ParallaxHeader: React.FC = () => (
 	<section className="parallax-container" aria-label="Hero">
 		<picture className="parallax-lcp-preload" aria-hidden="true">
@@ -19,13 +21,18 @@ const ParallaxHeader: React.FC = () => (
 				key={layer.id}
 				className={`parallax-layer layer-${layer.id}`}
 				data-parallax-speed={layer.speed}
-				style={{
-					backgroundImage: `url("${layer.image}")`,
-					backgroundPosition: layer.backgroundPosition ?? 'center center',
-					backgroundSize: layer.backgroundSize ?? 'cover',
-					zIndex: layer.zIndex
-				}}
-			></div>
+				style={{ zIndex: layer.zIndex }}
+			>
+				<img
+					className="parallax-layer-image"
+					src={layer.image}
+					alt=""
+					aria-hidden="true"
+					loading={isHighPriorityLayer(layer.id) ? 'eager' : 'lazy'}
+					decoding="async"
+					fetchPriority={isHighPriorityLayer(layer.id) ? 'high' : 'auto'}
+				/>
+			</div>
 		))}
 		<div className="parallax-layer parallax-hero-content" data-parallax-speed="1.0">
 			<div className="container">

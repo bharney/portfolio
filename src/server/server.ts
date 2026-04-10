@@ -25,6 +25,8 @@ export function createServer() {
 					/\.[a-f0-9]{16,}\.(js|css|woff2|woff|webp|jpg|jpeg|png|gif|avif)$/.test(filePath)
 				) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+				} else if (/\.(woff2|woff|ttf|otf|eot)$/.test(filePath)) {
+					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 				} else {
 					res.setHeader('Cache-Control', 'public, max-age=3600');
 				}

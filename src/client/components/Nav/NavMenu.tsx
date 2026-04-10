@@ -30,30 +30,37 @@ interface NavProps {
 }
 export class NavMenu extends React.Component<NavMenuProps, {}> {
 	private scrollTicking = false;
+	private navbarEl: HTMLElement | null = null;
+	private isAffixed = false;
 
 	componentDidMount() {
+		this.navbarEl = document.getElementById('custom-nav');
+		this.isAffixed = window.pageYOffset > 50;
+		if (this.navbarEl) {
+			this.navbarEl.classList.toggle('affix', this.isAffixed);
+			this.navbarEl.classList.remove('top-nav-collapse');
+		}
 		window.addEventListener('scroll', this.handleScroll, { passive: true });
 	}
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
+		this.navbarEl = null;
 	}
 
 	handleScroll = () => {
 		if (this.scrollTicking) return;
 		this.scrollTicking = true;
 		requestAnimationFrame(() => {
-			const navbar = document.getElementById('custom-nav');
+			const navbar = this.navbarEl;
 			if (!navbar) {
 				this.scrollTicking = false;
 				return;
 			}
-			const windowsScrollTop = window.pageYOffset;
-			if (windowsScrollTop > 50) {
-				navbar.classList.add('affix');
-			} else {
-				navbar.classList.remove('affix');
+			const shouldAffix = window.pageYOffset > 50;
+			if (shouldAffix !== this.isAffixed) {
+				this.isAffixed = shouldAffix;
+				navbar.classList.toggle('affix', shouldAffix);
 			}
-			navbar.classList.remove('top-nav-collapse');
 			this.scrollTicking = false;
 		});
 	};
