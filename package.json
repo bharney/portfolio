@@ -21,6 +21,7 @@
 		"prettier": "prettier --write \"**/*.{scss,ts,js,json,yml}\"",
 		"prettier-check": "prettier --check \"**/*.{scss,ts,js,json,yml}\"",
 		"images:webp": "npx ts-node scripts/convert-to-webp.ts",
+		"images:parallax": "npx ts-node scripts/generate-parallax-variants.ts",
 		"analyze": "npx webpack --env PRODUCTION --env ANALYZE"
 	},
 	"dependencies": {
