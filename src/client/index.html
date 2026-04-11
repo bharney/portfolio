@@ -281,6 +281,11 @@
 			}
 
 			@media (min-width: 768px) {
+				.navbar-expand-md {
+					flex-wrap: nowrap;
+					justify-content: flex-start;
+				}
+
 				.navbar-expand-md .navbar-collapse {
 					display: flex !important;
 					flex-basis: auto;
@@ -288,6 +293,11 @@
 
 				.navbar-expand-md .navbar-toggler {
 					display: none;
+				}
+
+				.navbar-expand-md > .container,
+				.navbar-expand-md > .nav-links {
+					flex-wrap: nowrap;
 				}
 			}
 
@@ -338,8 +348,47 @@
 				list-style: none;
 			}
 
+			.mt-3 {
+				margin-top: 1rem !important;
+			}
+
+			.pt-0 {
+				padding-top: 0 !important;
+			}
+
+			.mt-4 {
+				margin-top: 1.5rem !important;
+			}
+
+			.my-4 {
+				margin-top: 1.5rem !important;
+				margin-bottom: 1.5rem !important;
+			}
+
+			.w-25 {
+				width: 25% !important;
+			}
+
+			/* Font Awesome inline icons — match FA's sizing so SSR icons don't reflow */
+			.svg-inline--fa {
+				display: var(--fa-display, inline-block);
+				height: 1em;
+				overflow: visible;
+				vertical-align: -0.125em;
+			}
+
 			.me-auto {
 				margin-right: auto !important;
+			}
+
+			.d-none {
+				display: none !important;
+			}
+
+			@media (min-width: 768px) {
+				.d-md-block {
+					display: block !important;
+				}
 			}
 
 			#custom-nav {
@@ -359,8 +408,11 @@
 			}
 
 			.nav-links {
-				min-height: 46px;
+				display: flex;
+				flex-wrap: wrap;
 				align-items: center;
+				justify-content: space-between;
+				min-height: 46px;
 			}
 
 			.mobile-nav {
