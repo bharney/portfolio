@@ -4,35 +4,51 @@ import { parallaxLayers } from './parallaxLayers';
 const isHighPriorityLayer = (id: number): boolean => id === 1 || id === 2 || id === 5;
 const isLikelyDesktopLcpLayer = (id: number): boolean => id === 15;
 
+const normalizeAssetUrl = (assetUrl: string): string => {
+	const forwardSlashes = assetUrl.replace(/\\/g, '/');
+	const noOrigin = forwardSlashes.replace(/^https?:\/\/[^/]+/i, '');
+	const normalizedBase = noOrigin.replace(/^\/js\/\.\.\//, '/').replace(/^\.\//, '/');
+
+	return encodeURI(normalizedBase);
+};
+
 const ParallaxHeader: React.FC = () => (
 	<section className="parallax-container" aria-label="Hero">
 		<div className="parallax-layer cover" data-parallax-speed="0"></div>
-		{parallaxLayers.map(layer => (
-			<div
-				key={layer.id}
-				className={`parallax-layer layer-${layer.id}`}
-				data-parallax-speed={layer.speed}
-				style={{ zIndex: layer.zIndex }}
-			>
-				<picture>
-					<source media="(min-width: 768px)" srcSet={layer.desktopImage} />
-					<img
-						className="parallax-layer-image"
-						src={layer.mobileImage}
-						alt=""
-						aria-hidden="true"
-						loading={
-							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'eager' : 'lazy'
-						}
-						decoding="async"
-						fetchPriority={
-							isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'high' : 'auto'
-						}
-						sizes="100vw"
-					/>
-				</picture>
-			</div>
-		))}
+		{parallaxLayers.map(layer => {
+			// Keep SSR and client URLs identical and srcset-safe.
+			const desktopSrc = normalizeAssetUrl(layer.desktopImage);
+			const mobileSrc = normalizeAssetUrl(layer.mobileImage);
+
+			return (
+				<div
+					key={layer.id}
+					className={`parallax-layer layer-${layer.id}`}
+					data-parallax-speed={layer.speed}
+					style={{ zIndex: layer.zIndex }}
+				>
+					<picture>
+						<source media="(min-width: 768px)" srcSet={desktopSrc} />
+						<img
+							className="parallax-layer-image"
+							src={mobileSrc}
+							alt=""
+							aria-hidden="true"
+							loading={
+								isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id)
+									? 'eager'
+									: 'lazy'
+							}
+							decoding="async"
+							fetchPriority={
+								isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'high' : 'auto'
+							}
+							sizes="100vw"
+						/>
+					</picture>
+				</div>
+			);
+		})}
 		<div className="parallax-layer parallax-hero-content" data-parallax-speed="1.0">
 			<div className="container">
 				<div className="hero-content">

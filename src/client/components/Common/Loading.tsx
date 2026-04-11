@@ -10,9 +10,9 @@ class Loading extends React.Component<{}, {}> {
 				<FontAwesomeIcon
 					style={{
 						position: 'absolute',
-						top: '7vh',
+						top: '40vh',
 						left: '50%',
-						color: '#fff',
+						color: '#000000',
 						width: '2rem',
 						height: '2rem'
 					}}
