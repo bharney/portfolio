@@ -2,6 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import { errorMiddleware } from './middleware/errorMiddleware';
 import { reactMiddleware } from './middleware/reactMiddleware';
+import { enforceCanonicalOrigin, removeTrailingSlash } from './middleware/seoMiddleware';
 import { PUBLIC_DIR_PATH } from './configuration';
 
 // we split the express app definition in a module separated from the entry point because it's easier to test.
@@ -11,6 +12,12 @@ export function createServer() {
 
 	// Enable gzip/deflate compression for all responses
 	server.use(compression());
+
+	// SEO: redirect HTTP→HTTPS and www→non-www with a single 301 (production only)
+	server.use(enforceCanonicalOrigin());
+
+	// SEO: strip trailing slashes so /portfolio/ → /portfolio (301)
+	server.use(removeTrailingSlash());
 
 	server.use(
 		express.static(PUBLIC_DIR_PATH, {
