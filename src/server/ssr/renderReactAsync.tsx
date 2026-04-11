@@ -8,6 +8,7 @@ import { PrerenderData } from '../../shared/PrerenderedData';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { rootReducers } from '../../client/store';
+import { buildCanonicalUrl } from '../middleware/seoMiddleware';
 /**
  * Renders the react App as a html string.
  * @param url The render url. It will be injected in the react router so it can render the corresponding route.
@@ -17,7 +18,14 @@ import { rootReducers } from '../../client/store';
 export async function renderReactAsync(url: string, prerenderedObject?: unknown) {
 	// read the html template file
 
-	const staticHtmlContent = await fs.promises.readFile(HTML_TEMPLATE_PATH, { encoding: 'utf-8' });
+	let staticHtmlContent = await fs.promises.readFile(HTML_TEMPLATE_PATH, { encoding: 'utf-8' });
+
+	// Inject canonical link tag
+	const canonicalUrl = buildCanonicalUrl(url);
+	staticHtmlContent = staticHtmlContent.replace(
+		'<!-- CANONICAL -->',
+		`<link rel="canonical" href="${canonicalUrl}" />`
+	);
 
 	// create an element to store server side data
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { parallaxLayers } from './parallaxLayers';
 
-const isHighPriorityLayer = (id: number): boolean => id === 0 || id === 2 || id === 5;
+const isHighPriorityLayer = (id: number): boolean => id === 1 || id === 2 || id === 5;
 const isLikelyDesktopLcpLayer = (id: number): boolean => id === 15;
 
 const ParallaxHeader: React.FC = () => (

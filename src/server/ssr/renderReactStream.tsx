@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { rootReducers } from '../../client/store';
 import { Response } from 'express';
+import { buildCanonicalUrl, KNOWN_ROUTES } from '../middleware/seoMiddleware';
 
 /**
  * Renders the React App using streaming SSR via renderToPipeableStream.
@@ -22,7 +23,18 @@ import { Response } from 'express';
  * @param prerenderedObject  Optional server-side data passed to the client.
  */
 export function renderReactStream(url: string, res: Response, prerenderedObject?: unknown): void {
-	const templateHtml = fs.readFileSync(HTML_TEMPLATE_PATH, { encoding: 'utf-8' });
+	let templateHtml = fs.readFileSync(HTML_TEMPLATE_PATH, { encoding: 'utf-8' });
+
+	// Inject canonical link tag
+	const canonicalUrl = buildCanonicalUrl(url);
+	templateHtml = templateHtml.replace(
+		'<!-- CANONICAL -->',
+		`<link rel="canonical" href="${canonicalUrl}" />`
+	);
+
+	// Determine if this is a known route (for 404 status)
+	const normalizedPath = url.split('?')[0].toLowerCase().replace(/\/$/, '') || '/';
+	const isKnownRoute = KNOWN_ROUTES.has(normalizedPath);
 
 	const dataElement = PrerenderData.saveToDom(prerenderedObject);
 
@@ -51,7 +63,7 @@ export function renderReactStream(url: string, res: Response, prerenderedObject?
 
 	const { pipe } = renderToPipeableStream(WrappedApp, {
 		onShellReady() {
-			res.statusCode = didError ? 500 : 200;
+			res.statusCode = didError ? 500 : isKnownRoute ? 200 : 404;
 			res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
 			// Send everything before <div id="root"> (head, critical CSS, etc.)

@@ -16,7 +16,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 const autoprefixer = require('autoprefixer');
 
-const parallaxPreloadIds = [0, 2, 5, 15];
+const parallaxPreloadIds = [1, 2, 5, 15];
 interface Env {
 	production: boolean;
 	hot: boolean;
@@ -322,7 +322,7 @@ function createClientConfig(env: Env): Configuration {
 											rel: 'preload',
 											as: 'image',
 											type: 'image/webp',
-											...([2, 5, 15].includes(preload.id) ? { fetchpriority: 'high' } : {}),
+											...([1, 2, 5, 15].includes(preload.id) ? { fetchpriority: 'high' } : {}),
 											href: `/${preload.asset}`
 										}
 									}));
