@@ -6,6 +6,10 @@ export default function Home() {
 	useEffect(() => {
 		let manager: { destroy(): void } | null = null;
 
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			return;
+		}
+
 		import('../../utils/ParallaxManager').then(({ ParallaxManager }) => {
 			try {
 				manager = new ParallaxManager('.parallax-layer');

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { parallaxLayers } from './parallaxLayers';
 
-const isHighPriorityLayer = (id: number): boolean => id === 1 || id === 2 || id === 5;
-const isLikelyDesktopLcpLayer = (id: number): boolean => id === 15;
+const isHighPriorityLayer = (id: number): boolean => id === 2;
 
 const normalizeAssetUrl = (assetUrl: string): string => {
 	const forwardSlashes = assetUrl.replace(/\\/g, '/');
@@ -34,15 +33,11 @@ const ParallaxHeader: React.FC = () => (
 							src={mobileSrc}
 							alt=""
 							aria-hidden="true"
-							loading={
-								isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id)
-									? 'eager'
-									: 'lazy'
-							}
+							width={1440}
+							height={1069}
+							loading={isHighPriorityLayer(layer.id) ? 'eager' : 'lazy'}
 							decoding="async"
-							fetchPriority={
-								isHighPriorityLayer(layer.id) || isLikelyDesktopLcpLayer(layer.id) ? 'high' : 'auto'
-							}
+							fetchPriority={isHighPriorityLayer(layer.id) ? 'high' : 'auto'}
 							sizes="100vw"
 						/>
 					</picture>

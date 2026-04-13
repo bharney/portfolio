@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<base href="/" />
-		<title>bharney.com</title>
+		<title>Brian Harney's Software Portfolio</title>
 		<meta
 			name="description"
 			content="Brian Harney's software portfolio — projects, skills, and experience in full-stack web development."
@@ -573,6 +573,19 @@
 				display: flex;
 				align-items: flex-end;
 				padding-bottom: 3rem;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.parallax-layer,
+				.parallax-hero-content {
+					transform: none !important;
+					will-change: auto;
+				}
+
+				.parallax-container {
+					height: auto;
+					min-height: 100vh;
+				}
 			}
 
 			.hero-content {

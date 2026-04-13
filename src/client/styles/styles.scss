@@ -363,6 +363,19 @@ main {
 		padding-bottom: 3rem;
 	}
 
+	@media (prefers-reduced-motion: reduce) {
+		.parallax-layer,
+		.parallax-hero-content {
+			transform: none !important;
+			will-change: auto;
+		}
+
+		.parallax-container {
+			height: auto;
+			min-height: 100vh;
+		}
+	}
+
 	.hero-content {
 		display: flex;
 		flex-direction: column;
