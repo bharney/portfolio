@@ -598,6 +598,13 @@ main {
 	}
 }
 
+/* ---------------------- CONTACT PAGE -------------------- */
+.contact-list {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 0;
+}
+
 @media (max-width: 991px) {
 	.navbar-nav {
 		flex-direction: row;
