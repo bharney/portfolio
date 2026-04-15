@@ -66,16 +66,14 @@ export function renderReactStream(url: string, res: Response, prerenderedObject?
 			res.statusCode = didError ? 500 : isKnownRoute ? 200 : 404;
 			res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-			// Send everything before <div id="root"> (head, critical CSS, etc.)
+			// Send the complete HTML with empty root div to show spinner
 			res.write(htmlBefore);
-
-			// Stream the React component tree into the root div
-			pipe(res);
-		},
-		onAllReady() {
-			// All Suspense boundaries have resolved — send the closing markup
 			res.write(htmlAfter);
 			res.end();
+		},
+		onAllReady() {
+			// Content is ready but we already sent the response
+			// Client-side React will handle hydration
 		},
 		onError(error) {
 			didError = true;
