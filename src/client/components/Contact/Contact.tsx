@@ -25,7 +25,7 @@ const ShowInfo = () => {
 				{showInfo ? 'Hide Info' : 'Show Info'}
 			</button>
 			{showInfo ? (
-				<ul className="list-unstyled fs-4">
+				<ul className="fs-4 contact-list">
 					<li>
 						<a className="text-decoration-none" href="mailto:bharney0@gmail.com">
 							bharney0@gmail.com

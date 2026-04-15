@@ -598,6 +598,46 @@ main {
 	}
 }
 
+/* ---------------------- CONTACT PAGE -------------------- */
+.contact-list {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 0;
+}
+
+/* ---------------------- ABOUT PAGE -------------------- */
+.about-bio {
+	overflow: hidden;
+}
+
+.about-bio-image {
+	float: right;
+	width: min(40%);
+	width: 20vw;
+	margin: 0 0 1.25rem 1.75rem;
+	shape-outside: circle(50%);
+	clip-path: circle(50%);
+}
+
+.about-bio-image picture,
+.about-bio-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 50%;
+}
+
+@media (max-width: 991px) {
+	.about-bio-image {
+		float: none;
+		margin: 0 auto 1.5rem;
+		width: 280px;
+		display: block;
+		shape-outside: none;
+		clip-path: none;
+	}
+}
+
 @media (max-width: 991px) {
 	.navbar-nav {
 		flex-direction: row;
